@@ -14,59 +14,13 @@ public class GamePanel extends JPanel {
   private Image backgroundImage;
   private Image clock;
   private Countdown timer = new Countdown();
-  private boolean isDisplayingWeakness = true;
+  private boolean isMemorizePhase = true;
   private Stack<Symbols> weakness;
 
   public GamePanel() {
-    this.setLayout(new BorderLayout());
+    this.setLayout(null);
 
-
-    // Create a JPanel for the CENTER region
-    JPanel centerPanel = new JPanel();
-    centerPanel.setOpaque(false);
-    centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-    JLabel placeHolder = new JLabel("placeHolder");
-    placeHolder.setPreferredSize(new Dimension(200, 600));
-    placeHolder.setOpaque(false);
-    centerPanel.add(placeHolder);
-    this.add(centerPanel, BorderLayout.CENTER);
-
-    // Create a JPanel for the EAST region
-    JPanel eastPanel = new JPanel();
-    eastPanel.setOpaque(false);
-    eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
-    JLabel placeHolder2 = new JLabel("placeHolder2");
-    placeHolder2.setPreferredSize(new Dimension(200, 600));
-    placeHolder2.setOpaque(false);
-    eastPanel.add(placeHolder2);
-    this.add(eastPanel, BorderLayout.EAST);
-
-    // Create a JPanel for the WEST region
-    JPanel westPanel = new JPanel();
-    westPanel.setOpaque(false);
-    westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
-    JLabel placeHolder3 = new JLabel("placeHolder3");
-    placeHolder3.setPreferredSize(new Dimension(200, 600));
-    placeHolder3.setOpaque(false);
-    westPanel.add(placeHolder3);
-    this.add(westPanel, BorderLayout.WEST);
-
-    // Create a JPanel for the NORTH region
-    JPanel northPanel = new JPanel();
-    northPanel.setOpaque(false);
-    northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-    JLabel placeHolder4 = new JLabel("placeHolder4");
-    placeHolder4.setPreferredSize(new Dimension(200, 600));
-    placeHolder4.setOpaque(false);
-    northPanel.add(placeHolder4);
-    this.add(northPanel, BorderLayout.NORTH);
-
-    JLabel symbolTable = new JLabel();
-    ImageIcon symbolTableImage = new ImageIcon(getClass().getClassLoader().getResource("resource/images_game/symbol_table.png"));
-    symbolTableImage = new ImageIcon(symbolTableImage.getImage().getScaledInstance(1000, 900, Image.SCALE_DEFAULT));
-    symbolTable.setIcon(symbolTableImage);
-    symbolTable.setPreferredSize(new Dimension(600, 800));
-    this.add(symbolTable, BorderLayout.SOUTH);
+    addSymbolTable();
 
     this.backgroundImage =
         new ImageIcon(
@@ -77,6 +31,38 @@ public class GamePanel extends JPanel {
             .getImage();
   }
 
+  private void addSymbolTable() {
+    JPanel symbolPanel = new JPanel();
+    symbolPanel.setOpaque(false);
+
+    JLabel symbolTable = new JLabel();
+    symbolTable.setLayout(null);
+    ImageIcon icon =
+        new ImageIcon(
+            getClass().getClassLoader().getResource("resource/images_game/symbol_table.png"));
+    icon = new ImageIcon(icon.getImage().getScaledInstance(1500, 1500, Image.SCALE_SMOOTH));
+    symbolTable.setIcon(icon);
+    symbolPanel.setBounds(200, 400, 1500, 1300);
+    symbolPanel.add(symbolTable);
+
+    for (int i = 1; i <= 6; i++) {
+      JLabel symbol = new JLabel();
+      symbol.setName("symbol" + i);
+      icon =
+          new ImageIcon(
+              getClass().getClassLoader().getResource("resource/images_game/symbol" + i + ".png"));
+      icon =
+          new ImageIcon(
+              icon.getImage()
+                  .getScaledInstance(
+                      icon.getIconWidth() / 3, icon.getIconHeight() / 3, Image.SCALE_SMOOTH));
+      symbol.setIcon(icon);
+      symbol.setBounds(100 + (i - 1) * 200, 400, icon.getIconWidth(), icon.getIconHeight());
+      symbolTable.add(symbol);
+    }
+    this.add(symbolPanel);
+  }
+
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
@@ -85,11 +71,16 @@ public class GamePanel extends JPanel {
     gojo.draw(g2);
     dragon.draw(g2);
     g2.drawImage(clock, -40, 800, 250, 250, this);
-    if (isDisplayingWeakness && timer.getTime() > 0) {
-      if (timer.getTime() == 0) isDisplayingWeakness = false;
+    if (isMemorizePhase) displayWeakness(g2);
+  }
+
+  private void displayWeakness(Graphics2D g2) {
+    if (timer.getTime() == 0) isMemorizePhase = false;
+
+    if (timer.getTime() == 9) {
       timer.countdown();
-      g2.setFont(new Font("TimesRoman", Font.BOLD, 100));
-      g2.drawString(timer.getTime() + "", 58, 960);
+      g2.setFont(new Font("Arial", Font.BOLD, 100));
     }
+    g2.drawString(timer.getTime() + "", 58, 960);
   }
 }

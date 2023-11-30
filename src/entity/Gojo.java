@@ -56,6 +56,9 @@ public class Gojo extends Entity {
     }
   }
 
+  public void setState(int state) {
+    this.state = state;
+  }
   public void draw(Graphics2D g2) {
     switch (state) {
       case 0: // idle
