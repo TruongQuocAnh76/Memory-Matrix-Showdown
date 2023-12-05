@@ -8,6 +8,10 @@ public class Symbols {
   }
 
   public String getImagePath() {
-    return "resource/images_game/symbols/symbol" + index + ".png";
+    return "images/symbol" + index + ".png";
+  }
+  @Override
+  public String toString() {
+    return "symbol" + index;
   }
 }

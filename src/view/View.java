@@ -6,10 +6,11 @@ import javax.swing.*;
 public class View extends JFrame implements Runnable {
   private final int fps = 15;
   private CardLayout cardLayout = new CardLayout();
-  private MouseController mouseController = new MouseController(this);
+  public MouseController mouseController = new MouseController(this);
   private Thread thread = new Thread(this);
   private JPanel mainMenu;
-  private GamePanel gamePanel;
+  public GamePanel gamePanel;
+  private boolean isCounting = false;
 
   public View() {
     init();
@@ -34,43 +35,44 @@ public class View extends JFrame implements Runnable {
     thread.start();
   }
 
+
   private void mainMenuInit() {
     mainMenu = new JPanel(new GridLayout());
     JLabel background = new JLabel();
     background.setLayout(new GridBagLayout());
     background.setIcon(
         new ImageIcon(
-            getClass().getClassLoader().getResource("resource/images_game/background.png")));
+            getClass().getClassLoader().getResource("images/background.png")));
     mainMenu.add(background);
     
     GridBagConstraints gbc = new GridBagConstraints();
 
-    JLabel title = getLabelButton("title", "resource/images_game/game_name.png", 800, 100);
+    JLabel title = getLabelButton("title", "images/game_name.png", 800, 100);
     gbc.gridx = 1;
     gbc.gridy = 0;
     gbc.gridwidth = 2;
     background.add(title, gbc);
 
     gbc.gridwidth = 1;
-    JLabel startButton = getLabelButton("start", "resource/images_game/start_button.png", 500, 400);
+    JLabel startButton = getLabelButton("start", "images/start_button.png", 500, 400);
     gbc.gridx = 1;
     gbc.gridy = 2;
     background.add(startButton, gbc);
     startButton.addMouseListener(mouseController);
 
-    JLabel exitButton = getLabelButton("exit", "resource/images_game/exit_button.png", 500, 400);
+    JLabel exitButton = getLabelButton("exit", "images/exit_button.png", 500, 400);
     gbc.gridx = 2;
     gbc.gridy = 2;
     background.add(exitButton, gbc);
     exitButton.addMouseListener(mouseController);
 
     JLabel highScoreButton =
-        getLabelButton("highscore", "resource/images_game/high_score_button.png", 500, 400);
+        getLabelButton("highscore", "images/high_score_button.png", 500, 400);
     gbc.gridx = 1;
     gbc.gridy = 3;
     background.add(highScoreButton, gbc);
 
-    JLabel helpButton = getLabelButton("help", "resource/images_game/info_button.png", 500, 400);
+    JLabel helpButton = getLabelButton("help", "images/info_button.png", 500, 400);
     gbc.gridx = 2;
     gbc.gridy = 3;
     gbc.gridwidth = 1;
@@ -87,7 +89,7 @@ public class View extends JFrame implements Runnable {
   }
 
   private void gamePanelInit() {
-    gamePanel = new GamePanel();
+    gamePanel = new GamePanel(this);
     this.add(gamePanel, "gamePanel");
   }
 

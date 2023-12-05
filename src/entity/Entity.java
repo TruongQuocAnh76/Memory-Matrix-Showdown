@@ -1,5 +1,4 @@
 package entity;
-
 import java.awt.image.BufferedImage;
 
 public class Entity {
@@ -8,6 +7,7 @@ public class Entity {
   final int SPRITE_INTERVAL = 3;
   BufferedImage[] idleSprite, attackSprite, hurtSprite;
   BufferedImage currentSprite;
+  final int MAX_SPRITE_NUMBER= 3;
 
   public Entity(int health) {
     this.health = health;

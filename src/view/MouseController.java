@@ -5,44 +5,50 @@ import java.awt.event.MouseListener;
 import javax.swing.*;
 
 public class MouseController implements MouseListener {
-    private View view;
-    public MouseController(View view) {
-        this.view = view;
+  private View view;
+
+  public MouseController(View view) {
+    this.view = view;
+  }
+
+  @Override
+  public void mouseClicked(MouseEvent e) {
+    JLabel panel = (JLabel) e.getSource();
+    switch (panel.getName()) {
+      case "start":
+        view.changePanel("gamePanel");
+        break;
+      case "exit":
+        view.exit();
+        break;
+      case "highScore":
+        // TODO
+        System.out.println("highScore");
+        break;
+      case "help":
+        // TODO
+        System.out.println("help");
+        break;
+      case "symbol1":
+      case "symbol2":
+      case "symbol3":
+      case "symbol4":
+      case "symbol5":
+      case "symbol6":
+        this.view.gamePanel.castSpell(panel.getName());
+        break;
     }
+  }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        JLabel panel = (JLabel) e.getSource();
-        if (panel.getName().equals("start")) {
-            view.changePanel("gamePanel");
-      System.out.println("start");
-        } else if (panel.getName().equals("exit")) {
-            view.exit();
-      System.out.println("exit");
-        } else if (panel.getName().equals("highScore")) {
-            System.out.println("highScore");
-        } else if (panel.getName().equals("help")) {
-            System.out.println("help");
-        }
-    }
+  @Override
+  public void mousePressed(MouseEvent e) {}
 
-    @Override
-    public void mousePressed(MouseEvent e) {
+  @Override
+  public void mouseReleased(MouseEvent e) {}
 
-    }
+  @Override
+  public void mouseEntered(MouseEvent e) {}
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
+  @Override
+  public void mouseExited(MouseEvent e) {}
 }

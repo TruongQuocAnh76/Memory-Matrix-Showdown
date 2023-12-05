@@ -1,32 +1,42 @@
 package module;
 
 public class Countdown implements Runnable {
-  private final int maxTime = 9;
   private int time;
-  private Thread thread = new Thread(this);
-
-  public Countdown() {
-    time = maxTime;
-  }
-
+  private Thread thread;
+  public static final int MEMORIZE_TIME = 10;
+  public static final int INPUT_TIME = 10;
+  public static final int RESULT_TIME = 2;
   public int getTime() {
     return time;
   }
 
-  public void countdown() {
-    if (!thread.isAlive()) thread.start();
+
+  public void countdown(int time) {
+
+    thread = new Thread(this);
+    this.time = time;
+    thread.start();
+  }
+
+  public boolean isCounting() {
+    return time > 0;
+  }
+
+  public void stopCounting() {
+    time = -1;
+    thread.interrupt();
   }
 
   @Override
   public void run() {
-    time = maxTime;
     while (time > 0) {
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        return; // thread is interrupted, stop counting, stop thread
       }
       time--;
     }
+    time--;
   }
 }
