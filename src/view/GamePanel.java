@@ -8,7 +8,6 @@ import module.Symbols;
 
 @SuppressWarnings("all")
 public class GamePanel extends JPanel {
-  JPanel weaknessPanel = new JPanel();
   private boolean isStartOfTheGame = true;
   private View view;
   private Gojo gojo = new Gojo();
@@ -27,7 +26,10 @@ public class GamePanel extends JPanel {
       };
   private boolean isMemorizePhase = true;
   private boolean isCastingPhase = false;
-  private JLabel weaknessTable = new JLabel();
+  // table to display weakness and user's input
+  JPanel symbolPanel = new JPanel();
+  private JLabel symbolTable = new JLabel();
+
   private JPanel inputPanel = new JPanel();
 
   public GamePanel(View view) {
@@ -39,12 +41,21 @@ public class GamePanel extends JPanel {
     this.backgroundImage =
         new ImageIcon(getClass().getClassLoader().getResource("images/background.png")).getImage();
 
-    // TDOO: setting clock as icon makes the timer text goes under it, fix this
     ImageIcon clock = new ImageIcon(getClass().getClassLoader().getResource("images/clock.png"));
     clock = new ImageIcon(clock.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH));
     clockLabel.setIcon(clock);
     clockLabel.setBounds(-40, 850, 250, 250);
     this.add(clockLabel);
+
+    JLabel exitButton = new JLabel();
+    exitButton.setName("back");
+ImageIcon exitIcon =
+        new ImageIcon(getClass().getClassLoader().getResource("images/exit_button.png"));
+    exitIcon = new ImageIcon(exitIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH));
+    exitButton.setIcon(exitIcon);
+    exitButton.setBounds(1600, 850, 400, 400);
+    exitButton.addMouseListener(view.mouseController);
+    this.add(exitButton);
   }
 
   private void addSymbolTable() {
@@ -76,20 +87,20 @@ public class GamePanel extends JPanel {
     this.add(inputPanel);
 
     // table to display weakness
-    weaknessTable.setLayout(null);
+    symbolTable.setLayout(null);
 
-    weaknessPanel.setBackground(Color.BLACK);
-    weaknessPanel.setBackground(
+    symbolPanel.setBackground(Color.BLACK);
+    symbolPanel.setBackground(
         new Color(
             0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
-    weaknessPanel.setBounds(300, 0, 1200, 1200);
+    symbolPanel.setBounds(300, 0, 1200, 1200);
     ImageIcon weaknessIcon =
         new ImageIcon(getClass().getClassLoader().getResource("images/symbol_table.png"));
     weaknessIcon =
         new ImageIcon(weaknessIcon.getImage().getScaledInstance(1200, 1200, Image.SCALE_SMOOTH));
-    weaknessTable.setIcon(weaknessIcon);
-    weaknessPanel.add(weaknessTable);
-    this.add(weaknessPanel);
+    symbolTable.setIcon(weaknessIcon);
+    symbolPanel.add(symbolTable);
+    this.add(symbolPanel);
   }
 
   @Override
@@ -100,13 +111,10 @@ public class GamePanel extends JPanel {
     gojo.draw(g2);
     dragon.draw(g2);
 
-    if (isMemorizePhase) {
-      memorizePhase(g2);
-    } else if (isCastingPhase) {
-      castingPhase(g2);
-    } else { // otherwise is attack phase (cause gojo needs to get sliced up for more than 2 sec
-      attackPhase(g2);
-    }
+    if (isMemorizePhase) memorizePhase(g2);
+    else if (isCastingPhase) castingPhase(g2);
+    else // otherwise is attack phase (cause gojo needs to get sliced up for more than 2 sec
+    attackPhase(g2);
   }
 
   private void attackPhase(Graphics2D g2) {
@@ -125,15 +133,15 @@ public class GamePanel extends JPanel {
 
   private void memorizePhaseSetup() {
     // show weakness table
-    weaknessTable.setVisible(true);
-    weaknessPanel.setVisible(
+    symbolTable.setVisible(true);
+    symbolPanel.setVisible(
         true); // as the panel is the parent of the table, it must be visible too
 
     inputPanel.setVisible(false); // hide input table
 
     dragon.revealWeakness();
     // adding weakness symbols to weakness table
-    weaknessTable.removeAll(); // remove all previous symbols
+    symbolTable.removeAll(); // remove all previous symbols
     for (int i = 0; i < 5; i++) {
       JLabel symbol = new JLabel();
       symbol.setName("weakness" + i);
@@ -147,7 +155,7 @@ public class GamePanel extends JPanel {
                       icon.getIconWidth() / 4, icon.getIconHeight() / 4, Image.SCALE_SMOOTH));
       symbol.setIcon(icon);
       symbol.setBounds(30 + (i * 220), 358, icon.getIconWidth(), icon.getIconHeight());
-      weaknessTable.add(symbol);
+      symbolTable.add(symbol);
     }
     // starts memorize phase countdown
     timer.countdown(Countdown.MEMORIZE_TIME);
@@ -167,8 +175,10 @@ public class GamePanel extends JPanel {
   }
 
   private void attackPhaseSetup() {
-    // hide input table
+    // hide input table and symbol table
     inputPanel.setVisible(false);
+    symbolPanel.setVisible(false);
+    symbolTable.setVisible(false);
     // starts attack phase countdown
     timer.countdown(Countdown.RESULT_TIME);
   }
@@ -177,9 +187,7 @@ public class GamePanel extends JPanel {
     int correct = 0;
 
     while (!gojo.getSpells().isEmpty()) {
-      Symbols gojoSpells = gojo.getSpells().pop();
-      Symbols dragonWeakness = dragon.getWeakness().pop();
-      if (gojoSpells.equals(dragonWeakness)) correct++;
+      if (gojo.getSpells().pop().equals(dragon.getWeakness().pop())) correct++;
     }
 
     switch (correct) {
@@ -207,23 +215,49 @@ public class GamePanel extends JPanel {
       isMemorizePhase = false;
       isCastingPhase = true;
 
-      inputPhaseSetup();
+      castingPhaseSetup();
     }
     // draw remaining time
   }
 
-  private void inputPhaseSetup() {
-    // hide weakness table
-    weaknessPanel.setVisible(false);
-    weaknessTable.setVisible(false);
+  private void castingPhaseSetup() {
     // show input table
     inputPanel.setVisible(true);
-
+    // clear symbol table for player's input
+    symbolTable.removeAll();
     // starts input phase countdown
     timer.countdown(Countdown.INPUT_TIME);
   }
 
   public void castSpell(String symbolName) {
+    // add inputted symbol to table
+    JLabel symbol = new JLabel();
+    symbol.setName("input" + symbolName);
+    ImageIcon icon =
+            new ImageIcon(
+                    getClass().getClassLoader().getResource("images/" + symbolName + ".png"));
+    icon =
+            new ImageIcon(
+                    icon.getImage()
+                            .getScaledInstance(
+                                    icon.getIconWidth() / 4, icon.getIconHeight() / 4, Image.SCALE_SMOOTH));
+    symbol.setIcon(icon);
+    symbol.setBounds(30 + (gojo.getSpells().size() * 220), 358, icon.getIconWidth(), icon.getIconHeight());
+    symbolTable.add(symbol);
+
     gojo.castSpell(symbolName);
+  }
+  /**
+   * reset the game (when user start the game after pressing the back button)
+   */
+  public void reset() {
+    isStartOfTheGame = true;
+    gojo = new Gojo();
+    dragon = new Dragon(100);
+    timer = new Countdown();
+    isMemorizePhase = true;
+    isCastingPhase = false;
+    symbolPanel.setVisible(false);
+    inputPanel.setVisible(false);
   }
 }

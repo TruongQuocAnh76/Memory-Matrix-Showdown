@@ -29,6 +29,9 @@ public class MouseController implements MouseListener {
         // TODO
         System.out.println("help");
         break;
+      case "back":
+        view.changePanel("mainMenu");
+        break;
       case "symbol1":
       case "symbol2":
       case "symbol3":

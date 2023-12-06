@@ -5,11 +5,11 @@ import javax.swing.*;
 
 public class View extends JFrame implements Runnable {
   private final int fps = 30;
-  private CardLayout cardLayout = new CardLayout();
   public MouseController mouseController = new MouseController(this);
+  public GamePanel gamePanel;
+  private CardLayout cardLayout = new CardLayout();
   private Thread thread = new Thread(this);
   private JPanel mainMenu;
-  public GamePanel gamePanel;
 
   public View() {
     init();
@@ -106,6 +106,7 @@ public class View extends JFrame implements Runnable {
   }
 
   public void changePanel(String panelName) {
+    if(panelName.equals("gamePanel")) gamePanel.reset();
     cardLayout.show(this.getContentPane(), panelName);
   }
 
