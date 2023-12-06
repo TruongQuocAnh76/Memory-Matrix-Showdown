@@ -8,8 +8,12 @@ public class Entity {
   BufferedImage[] idleSprite, attackSprite, hurtSprite;
   BufferedImage currentSprite;
   final int MAX_SPRITE_NUMBER= 3;
+  public static final int IDLE = 0;
+  public static final int ATTACK = 1;
+  public static final int HURT = 2;
 
   public Entity(int health) {
     this.health = health;
   }
 }
+

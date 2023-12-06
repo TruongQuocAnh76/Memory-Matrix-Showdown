@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Stack;
 import javax.imageio.ImageIO;
+import javax.swing.*;
+
 import module.Symbols;
 
 public class Gojo extends Entity {
@@ -12,6 +14,8 @@ public class Gojo extends Entity {
   private final int Y_COORDINATE = 100;
   private final int WIDTH = 500;
   private final int HEIGHT = 750;
+  private BufferedImage heartFullSprite;
+  private BufferedImage heartNullSprite;
   private Stack<Symbols> spells = new Stack<>();
 
   public Gojo() {
@@ -25,51 +29,28 @@ public class Gojo extends Entity {
 
   private void loadSprites() {
     try {
-      idleSprite[0] =
+      heartFullSprite =
           ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/gojo_idle1.png"));
-      idleSprite[1] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/gojo_idle2.png"));
-      idleSprite[2] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/gojo_idle3.png"));
-      attackSprite[0] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/gojo_attack1.png"));
-      attackSprite[1] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/gojo_attack2.png"));
-      attackSprite[2] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/gojo_attack3.png"));
-      hurtSprite[0] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/gojo_hurt1.png"));
-      hurtSprite[1] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/gojo_hurt2.png"));
-      hurtSprite[2] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/gojo_hurt3.png"));
+              getClass().getClassLoader().getResourceAsStream("images/heart_full.png"));
+      heartNullSprite = ImageIO.read(getClass().getClassLoader().getResourceAsStream("images/heart_null.png"));
+      for (int i = 0; i < MAX_SPRITE_NUMBER; i++) {
+        idleSprite[i] =
+            ImageIO.read(
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("images/gojo_idle" + (i + 1) + ".png"));
+        attackSprite[i] =
+            ImageIO.read(
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("images/gojo_attack" + (i + 1) + ".png"));
+        hurtSprite[i] =
+            ImageIO.read(
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("images/gojo_hurt" + (i + 1) + ".png"));
+      }
+      //TODO: scale these image to the right size for optimal performance
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -84,6 +65,7 @@ public class Gojo extends Entity {
   }
 
   public void draw(Graphics2D g2) {
+    // draw gojo
     switch (state) {
       case 0: // idle
         currentSprite = idleSprite[spriteNum];
@@ -92,21 +74,35 @@ public class Gojo extends Entity {
           spriteNum %= MAX_SPRITE_NUMBER;
         }
         break;
-        // TODO
       case 1: // attack
         currentSprite = attackSprite[spriteNum];
-        spriteNum++;
-        spriteNum %= MAX_SPRITE_NUMBER;
+        if (spriteTime == SPRITE_INTERVAL) {
+          spriteNum++;
+          spriteNum %= MAX_SPRITE_NUMBER;
+        }
         break;
       case 2: // hurt
         currentSprite = hurtSprite[spriteNum];
-        spriteNum++;
-        spriteNum %= MAX_SPRITE_NUMBER;
+        if (spriteTime == SPRITE_INTERVAL) {
+          spriteNum++;
+          spriteNum %= MAX_SPRITE_NUMBER;
+        }
         break;
     }
     spriteTime++;
     spriteTime %= SPRITE_INTERVAL + 1;
     g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null);
+
+    // draw health bar
+    int i = 1;
+    while(i <= health) {
+      g2.drawImage(heartFullSprite, 150 * i - 150, 0, 200, 200, null);
+      i++;
+    }
+    while(i <= 3) {
+      g2.drawImage(heartNullSprite, 150 * i - 150, 0, 200, 200, null);
+      i++;
+    }
   }
 
   /**
@@ -120,7 +116,7 @@ public class Gojo extends Entity {
 
   /** receive 1 damage from dragon, also change sprite from idle to being split in half */
   public void takeDamage() {
-    setState(2);
+    setState(Entity.HURT);
     health--;
   }
 
@@ -131,7 +127,7 @@ public class Gojo extends Entity {
    * @param dragon
    */
   public void attack(int correct, Dragon dragon) {
-    setState(1);
+    setState(Entity.ATTACK);
     dragon.takeDamage(correct * attack);
   }
 }

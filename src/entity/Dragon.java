@@ -11,7 +11,6 @@ public class Dragon extends Entity {
   private final int Y_COORDINATE = 50;
   private final int WIDTH = 800;
   private final int HEIGHT = 1000;
-  private final int INITIAL_HEALTH = 900;
 
   private Stack<Symbols> weakness = new Stack<>(); // store dragon weakness this turn
 
@@ -30,51 +29,25 @@ public class Dragon extends Entity {
 
   private void loadSprites() {
     try {
-      idleSprite[0] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/dragon_idle1.png"));
-      idleSprite[1] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/dragon_idle2.png"));
-      idleSprite[2] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/dragon_idle3.png"));
-      attackSprite[0] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/dragon_attack1.png"));
-      attackSprite[1] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/dragon_attack2.png"));
-      attackSprite[2] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/dragon_attack3.png"));
-      hurtSprite[0] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/dragon_hurt1.png"));
-      hurtSprite[1] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/dragon_hurt2.png"));
-      hurtSprite[2] =
-          ImageIO.read(
-              getClass()
-                  .getClassLoader()
-                  .getResourceAsStream("images/dragon_hurt3.png"));
+      for (int i = 0; i < MAX_SPRITE_NUMBER; i++) {
+        idleSprite[i] =
+            ImageIO.read(
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("images/dragon_idle" + (i + 1) + ".png"));
+        attackSprite[i] =
+            ImageIO.read(
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("images/dragon_attack" + (i + 1) + ".png"));
+        hurtSprite[i] =
+            ImageIO.read(
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("images/dragon_hurt" + (i + 1) + ".png"));
+
+        // TODO: optimize this
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -92,13 +65,17 @@ public class Dragon extends Entity {
         // add later
       case 1: // attack
         currentSprite = attackSprite[spriteNum];
-        spriteNum++;
-        spriteNum %= MAX_SPRITE_NUMBER;
+        if (spriteTime == SPRITE_INTERVAL) {
+          spriteNum++;
+          spriteNum %= MAX_SPRITE_NUMBER;
+        }
         break;
       case 2: // hurt
         currentSprite = hurtSprite[spriteNum];
-        spriteNum++;
-        spriteNum %= MAX_SPRITE_NUMBER;
+        if (spriteTime == SPRITE_INTERVAL) {
+          spriteNum++;
+          spriteNum %= MAX_SPRITE_NUMBER;
+        }
         break;
     }
     spriteTime++;
@@ -122,7 +99,7 @@ public class Dragon extends Entity {
    * @param gojo
    */
   public void attack(Gojo gojo) {
-    this.setState(1);
+    this.setState(Entity.ATTACK);
     gojo.takeDamage();
   }
 
@@ -132,7 +109,7 @@ public class Dragon extends Entity {
    * @param damage
    */
   public void takeDamage(int damage) {
-    this.setState(2);
+    this.setState(Entity.HURT);
     this.health -= damage;
   }
 }

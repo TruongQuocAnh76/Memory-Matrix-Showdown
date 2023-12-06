@@ -4,13 +4,12 @@ import java.awt.*;
 import javax.swing.*;
 
 public class View extends JFrame implements Runnable {
-  private final int fps = 15;
+  private final int fps = 30;
   private CardLayout cardLayout = new CardLayout();
   public MouseController mouseController = new MouseController(this);
   private Thread thread = new Thread(this);
   private JPanel mainMenu;
   public GamePanel gamePanel;
-  private boolean isCounting = false;
 
   public View() {
     init();
@@ -102,6 +101,7 @@ public class View extends JFrame implements Runnable {
     Image img = icon.getImage();
     Image newImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     label.setIcon(new ImageIcon(newImg));
+    
     return label;
   }
 
@@ -116,8 +116,11 @@ public class View extends JFrame implements Runnable {
   @Override
   public void run() {
     while (thread.isAlive()) {
+      // test draw time
       mainMenu.repaint();
       gamePanel.repaint();
+
+      gamePanel.clockLabel.repaint();
       try {
         Thread.sleep(1000 / fps);
       } catch (Exception ignored) {
