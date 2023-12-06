@@ -19,22 +19,23 @@ public class View extends JFrame implements Runnable {
   private void init() {
     setTitle("Memory Matrix Showdown");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setResizable(true);
-    this.setSize(SwingConstants.CENTER, SwingConstants.CENTER);
     this.setLocationRelativeTo(null);
     this.setLayout(cardLayout);
     this.setResizable(true);
+    this.setUndecorated(true);
 
     mainMenuInit();
     gamePanelInit();
 
-    this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
-    this.setVisible(true);
+    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
+    gd.setFullScreenWindow(this);
+
+    this.setMinimumSize(this.getSize());
     this.pack();
+    this.setVisible(true);
 
     thread.start();
   }
-
 
   private void mainMenuInit() {
     mainMenu = new JPanel(new GridLayout());

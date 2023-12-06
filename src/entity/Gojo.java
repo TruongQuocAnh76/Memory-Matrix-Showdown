@@ -9,7 +9,7 @@ import module.Symbols;
 
 public class Gojo extends Entity {
   private final int X_COORDINATE = -50;
-  private final int Y_COORDINATE = 70;
+  private final int Y_COORDINATE = 100;
   private final int WIDTH = 500;
   private final int HEIGHT = 750;
   private Stack<Symbols> spells = new Stack<>();
