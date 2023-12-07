@@ -48,6 +48,7 @@ public class GamePanel extends JPanel {
     this.add(clockLabel);
 
     JLabel exitButton = new JLabel();
+    exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     exitButton.setName("back");
 ImageIcon exitIcon =
         new ImageIcon(getClass().getClassLoader().getResource("images/exit_button.png"));
@@ -144,6 +145,7 @@ ImageIcon exitIcon =
     symbolTable.removeAll(); // remove all previous symbols
     for (int i = 0; i < 5; i++) {
       JLabel symbol = new JLabel();
+      symbol.addMouseListener(view.mouseController);
       symbol.setName("weakness" + i);
       ImageIcon icon =
           new ImageIcon(

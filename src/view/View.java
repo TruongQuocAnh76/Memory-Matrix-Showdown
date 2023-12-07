@@ -55,12 +55,14 @@ public class View extends JFrame implements Runnable {
 
     gbc.gridwidth = 1;
     JLabel startButton = getLabelButton("start", "images/start_button.png", 500, 400);
+    startButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     gbc.gridx = 1;
     gbc.gridy = 2;
     background.add(startButton, gbc);
     startButton.addMouseListener(mouseController);
 
     JLabel exitButton = getLabelButton("exit", "images/exit_button.png", 500, 400);
+    exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     gbc.gridx = 2;
     gbc.gridy = 2;
     background.add(exitButton, gbc);
@@ -68,11 +70,13 @@ public class View extends JFrame implements Runnable {
 
     JLabel highScoreButton =
         getLabelButton("highscore", "images/high_score_button.png", 500, 400);
+    highScoreButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     gbc.gridx = 1;
     gbc.gridy = 3;
     background.add(highScoreButton, gbc);
 
     JLabel helpButton = getLabelButton("help", "images/info_button.png", 500, 400);
+    helpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     gbc.gridx = 2;
     gbc.gridy = 3;
     gbc.gridwidth = 1;
