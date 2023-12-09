@@ -8,7 +8,7 @@ public class Symbols {
   }
 
   public String getImagePath() {
-    return "images/symbol" + index + ".png";
+    return "resource/images/symbol" + index + ".png";
   }
 
   @Override

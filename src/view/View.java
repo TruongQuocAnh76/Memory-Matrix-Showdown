@@ -1,6 +1,15 @@
 package view;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class View extends JFrame implements Runnable {
@@ -18,6 +27,7 @@ public class View extends JFrame implements Runnable {
 
   public View() {
     init();
+
   }
 
   private void init() {
@@ -43,14 +53,14 @@ public class View extends JFrame implements Runnable {
     JLabel background = new JLabel();
     background.setLayout(new GridBagLayout());
     background.setIcon(
-        new ImageIcon(
-            getClass().getClassLoader().getResource("images/background.png")));
+            new ImageIcon(
+                    getClass().getClassLoader().getResource("resource/images/background.png")));
     mainMenu.add(background);
-    
+
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.BOTH;
 
-    JLabel title = getLabelButton("title", "images/game_name.png", GRID_WIDTH * 4, GRID_HEIGHT * 2);
+    JLabel title = getLabelButton("title", "resource/images/game_name.png", GRID_WIDTH * 4, GRID_HEIGHT * 2);
     gbc.gridx = 3;
     gbc.gridy = 0;
     gbc.gridwidth = 3;
@@ -60,14 +70,14 @@ public class View extends JFrame implements Runnable {
     gbc.gridwidth = 2;
     gbc.gridheight = 2;
 
-    JLabel startButton = getLabelButton("start", "images/start_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
+    JLabel startButton = getLabelButton("start", "resource/images/start_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
     startButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     gbc.gridx = 2;
     gbc.gridy = 3;
     background.add(startButton, gbc);
     startButton.addMouseListener(mouseController);
 
-    JLabel exitButton = getLabelButton("exit", "images/exit_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
+    JLabel exitButton = getLabelButton("exit", "resource/images/exit_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
     exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     gbc.gridx = 4;
     gbc.gridy = 3;
@@ -75,17 +85,18 @@ public class View extends JFrame implements Runnable {
     exitButton.addMouseListener(mouseController);
 
     JLabel highScoreButton =
-        getLabelButton("highscore", "images/high_score_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
+            getLabelButton("highscore", "resource/images/high_score_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
     highScoreButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     gbc.gridx = 2;
     gbc.gridy = 5;
     background.add(highScoreButton, gbc);
 
-    JLabel helpButton = getLabelButton("help", "images/info_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
+    JLabel helpButton = getLabelButton("help", "resource/images/info_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
     helpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     gbc.gridx = 4;
     gbc.gridy = 5;
     background.add(helpButton, gbc);
+
 
     this.add(mainMenu, "mainMenu");
   }
@@ -99,7 +110,7 @@ public class View extends JFrame implements Runnable {
     JLabel image = new JLabel();
     image.setName("dmfu");
     image.addMouseListener(mouseController);
-    ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("images/gojo_dead.png"));
+    ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("resource/images/gojo_dead.png"));
     icon = new ImageIcon(icon.getImage().getScaledInstance(GRID_WIDTH * MAX_GRID, GRID_HEIGHT * MAX_GRID, Image.SCALE_SMOOTH));
     image.setIcon(icon);
     endScreen.add(image, BorderLayout.CENTER);
@@ -119,7 +130,7 @@ public class View extends JFrame implements Runnable {
     Image img = icon.getImage();
     Image newImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     label.setIcon(new ImageIcon(newImg));
-    
+
     return label;
   }
 

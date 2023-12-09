@@ -10,8 +10,8 @@ import javax.swing.*;
 import module.Symbols;
 
 public class Gojo extends Entity {
-  private final int X_COORDINATE = -50;
-  private final int Y_COORDINATE = 120;
+  private final int X_COORDINATE = 100;
+  private final int Y_COORDINATE = 220;
   private final int WIDTH = 500;
   private final int HEIGHT = 600;
   private BufferedImage heartFullSprite;
@@ -30,25 +30,25 @@ public class Gojo extends Entity {
   private void loadSprites() {
     try {
       heartFullSprite =
-          ImageIO.read(
-              getClass().getClassLoader().getResourceAsStream("images/heart_full.png"));
-      heartNullSprite = ImageIO.read(getClass().getClassLoader().getResourceAsStream("images/heart_null.png"));
+              ImageIO.read(
+                      getClass().getClassLoader().getResourceAsStream("resource/images/heart_full.png"));
+      heartNullSprite = ImageIO.read(getClass().getClassLoader().getResourceAsStream("resource/images/heart_null.png"));
       for (int i = 0; i < MAX_SPRITE_NUMBER; i++) {
         idleSprite[i] =
-            ImageIO.read(
-                getClass()
-                    .getClassLoader()
-                    .getResourceAsStream("images/gojo_idle" + (i + 1) + ".png"));
+                ImageIO.read(
+                        getClass()
+                                .getClassLoader()
+                                .getResourceAsStream("resource/images/gojo_idle" + (i + 1) + ".png"));
         attackSprite[i] =
-            ImageIO.read(
-                getClass()
-                    .getClassLoader()
-                    .getResourceAsStream("images/gojo_attack" + (i + 1) + ".png"));
+                ImageIO.read(
+                        getClass()
+                                .getClassLoader()
+                                .getResourceAsStream("resource/images/gojo_attack" + (i + 1) + ".png"));
         hurtSprite[i] =
-            ImageIO.read(
-                getClass()
-                    .getClassLoader()
-                    .getResourceAsStream("images/gojo_hurt" + (i + 1) + ".png"));
+                ImageIO.read(
+                        getClass()
+                                .getClassLoader()
+                                .getResourceAsStream("resource/images/gojo_hurt" + (i + 1) + ".png"));
       }
       //TODO: scale these image to the right size for optimal performance
     } catch (IOException e) {

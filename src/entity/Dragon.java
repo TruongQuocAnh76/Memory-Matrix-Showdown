@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import module.Symbols;
 
 public class Dragon extends Entity {
-  private final int X_COORDINATE = 800;
+  private final int X_COORDINATE = 1150;
   private final int Y_COORDINATE = 100;
   private final int WIDTH = 800;
   private final int HEIGHT = 700;
@@ -31,20 +31,20 @@ public class Dragon extends Entity {
     try {
       for (int i = 0; i < MAX_SPRITE_NUMBER; i++) {
         idleSprite[i] =
-            ImageIO.read(
-                getClass()
-                    .getClassLoader()
-                    .getResourceAsStream("images/dragon_idle" + (i + 1) + ".png"));
+                ImageIO.read(
+                        getClass()
+                                .getClassLoader()
+                                .getResourceAsStream("resource/images/dragon_idle" + (i + 1) + ".png"));
         attackSprite[i] =
-            ImageIO.read(
-                getClass()
-                    .getClassLoader()
-                    .getResourceAsStream("images/dragon_attack" + (i + 1) + ".png"));
+                ImageIO.read(
+                        getClass()
+                                .getClassLoader()
+                                .getResourceAsStream("resource/images/dragonattack" + (i + 1) + ".png"));
         hurtSprite[i] =
-            ImageIO.read(
-                getClass()
-                    .getClassLoader()
-                    .getResourceAsStream("images/dragon_hurt" + (i + 1) + ".png"));
+                ImageIO.read(
+                        getClass()
+                                .getClassLoader()
+                                .getResourceAsStream("resource/images/dragonhurt" + (i + 1) + ".png"));
 
         // TODO: optimize this
       }
@@ -62,7 +62,7 @@ public class Dragon extends Entity {
           spriteNum %= MAX_SPRITE_NUMBER;
         }
         break;
-        // add later
+      // add later
       case 1: // attack
         currentSprite = attackSprite[spriteNum];
         if (spriteTime == SPRITE_INTERVAL) {

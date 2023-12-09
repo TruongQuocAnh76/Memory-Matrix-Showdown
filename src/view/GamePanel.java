@@ -15,15 +15,15 @@ public class GamePanel extends JPanel {
   private Image backgroundImage;
   private Countdown timer = new Countdown();
   public JLabel clockLabel =
-      new JLabel() {
-        @Override
-        public void paintComponent(Graphics g) {
-          super.paintComponent(g);
-          Graphics2D g2 = (Graphics2D) g;
-          g2.setFont(new Font("Arial", Font.BOLD, 80));
-          g2.drawString(timer.getTime() + "", 78, 128);
-        }
-      };
+          new JLabel() {
+            @Override
+            public void paintComponent(Graphics g) {
+              super.paintComponent(g);
+              Graphics2D g2 = (Graphics2D) g;
+              g2.setFont(new Font("Arial", Font.BOLD, 80));
+              g2.drawString(timer.getTime() + "", 78, 128);
+            }
+          };
   private boolean isMemorizePhase = true;
   private boolean isCastingPhase = false;
   // table to display weakness and user's input
@@ -39,19 +39,19 @@ public class GamePanel extends JPanel {
     addSymbolTable();
 
     this.backgroundImage =
-        new ImageIcon(getClass().getClassLoader().getResource("images/background.png")).getImage();
+            new ImageIcon(getClass().getClassLoader().getResource("resource/images/background.png")).getImage();
 
-    ImageIcon clock = new ImageIcon(getClass().getClassLoader().getResource("images/clock.png"));
+    ImageIcon clock = new ImageIcon(getClass().getClassLoader().getResource("resource/images/clock.png"));
     clock = new ImageIcon(clock.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
     clockLabel.setIcon(clock);
-    clockLabel.setBounds(-40, 750, 200, 200);
+    clockLabel.setBounds(-30, 750, 200, 200);
     this.add(clockLabel);
 
     JLabel exitButton = new JLabel();
     exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     exitButton.setName("back");
-ImageIcon exitIcon =
-        new ImageIcon(getClass().getClassLoader().getResource("images/exit_button.png"));
+    ImageIcon exitIcon =
+            new ImageIcon(getClass().getClassLoader().getResource("resource/images/exit_button.png"));
     exitIcon = new ImageIcon(exitIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH));
     exitButton.setIcon(exitIcon);
     exitButton.setBounds(1500, 800, 300, 300);
@@ -65,7 +65,7 @@ ImageIcon exitIcon =
 
     JLabel inputTable = new JLabel();
     ImageIcon icon =
-        new ImageIcon(getClass().getClassLoader().getResource("images/symbol_table.png"));
+            new ImageIcon(getClass().getClassLoader().getResource("resource/images/symbol_table.png"));
     icon = new ImageIcon(icon.getImage().getScaledInstance(1200, 1000, Image.SCALE_SMOOTH));
     inputTable.setIcon(icon);
     inputPanel.setBounds(270, 400, 1200, 1200);
@@ -76,12 +76,12 @@ ImageIcon exitIcon =
       symbol.addMouseListener(view.mouseController);
       symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       symbol.setName("symbol" + i);
-      icon = new ImageIcon(getClass().getClassLoader().getResource("images/symbol" + i + ".png"));
+      icon = new ImageIcon(getClass().getClassLoader().getResource("resource/images/symbol" + i + ".png"));
       icon =
-          new ImageIcon(
-              icon.getImage()
-                  .getScaledInstance(
-                      icon.getIconWidth() / 4, icon.getIconHeight() / 4, Image.SCALE_SMOOTH));
+              new ImageIcon(
+                      icon.getImage()
+                              .getScaledInstance(
+                                      icon.getIconWidth() / 4, icon.getIconHeight() / 4, Image.SCALE_SMOOTH));
       symbol.setIcon(icon);
       symbol.setBounds(50 + (i - 1) * 170, 280, icon.getIconWidth(), icon.getIconHeight());
       inputTable.add(symbol);
@@ -93,13 +93,13 @@ ImageIcon exitIcon =
 
     symbolPanel.setBackground(Color.BLACK);
     symbolPanel.setBackground(
-        new Color(
-            0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
+            new Color(
+                    0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
     symbolPanel.setBounds(300, 150, 1000, 800);
     ImageIcon weaknessIcon =
-        new ImageIcon(getClass().getClassLoader().getResource("images/symbol_table.png"));
+            new ImageIcon(getClass().getClassLoader().getResource("resource/images/symbol_table.png"));
     weaknessIcon =
-        new ImageIcon(weaknessIcon.getImage().getScaledInstance(1000, 800, Image.SCALE_SMOOTH));
+            new ImageIcon(weaknessIcon.getImage().getScaledInstance(1000, 800, Image.SCALE_SMOOTH));
     symbolTable.setIcon(weaknessIcon);
     symbolPanel.add(symbolTable);
     this.add(symbolPanel);
@@ -116,7 +116,7 @@ ImageIcon exitIcon =
     if (isMemorizePhase) memorizePhase(g2);
     else if (isCastingPhase) castingPhase(g2);
     else // otherwise is attack phase (cause gojo needs to get sliced up for more than 2 sec
-    attackPhase(g2);
+      attackPhase(g2);
   }
 
   private void attackPhase(Graphics2D g2) {
@@ -137,7 +137,7 @@ ImageIcon exitIcon =
     // show weakness table
     symbolTable.setVisible(true);
     symbolPanel.setVisible(
-        true); // as the panel is the parent of the table, it must be visible too
+            true); // as the panel is the parent of the table, it must be visible too
 
     inputPanel.setVisible(false); // hide input table
 
@@ -150,13 +150,13 @@ ImageIcon exitIcon =
       symbol.addMouseListener(view.mouseController);
       symbol.setName("weakness" + i);
       ImageIcon icon =
-          new ImageIcon(
-              getClass().getClassLoader().getResource(dragon.getWeakness().get(i).getImagePath()));
+              new ImageIcon(
+                      getClass().getClassLoader().getResource(dragon.getWeakness().get(i).getImagePath()));
       icon =
-          new ImageIcon(
-              icon.getImage()
-                  .getScaledInstance(
-                      icon.getIconWidth() / 5, icon.getIconHeight() / 5, Image.SCALE_SMOOTH));
+              new ImageIcon(
+                      icon.getImage()
+                              .getScaledInstance(
+                                      icon.getIconWidth() / 5, icon.getIconHeight() / 5, Image.SCALE_SMOOTH));
       symbol.setIcon(icon);
       symbol.setBounds(50 + (i * 170), 225, icon.getIconWidth(), icon.getIconHeight());
       symbolTable.add(symbol);
@@ -167,7 +167,7 @@ ImageIcon exitIcon =
 
   private void castingPhase(Graphics2D g2) {
     if (!timer.isCounting()
-        || gojo.getSpells().size() == 5) { // if time's up or player has done inputting
+            || gojo.getSpells().size() == 5) { // if time's up or player has done inputting
       // transit to attack phase, stop counting if there are time remaining (the moon is not red)
       isCastingPhase = false;
       timer.stopCounting();
@@ -206,7 +206,7 @@ ImageIcon exitIcon =
         dragon.attack(gojo);
     }
 
-//    if(gojo.getHealth() == 0) view.changePanel("endScreen");
+    if(gojo.getHealth() == 0) view.changePanel("endScreen");
   }
 
   private void memorizePhase(Graphics2D g2) {
@@ -242,7 +242,7 @@ ImageIcon exitIcon =
     symbol.setName("input" + symbolName);
     ImageIcon icon =
             new ImageIcon(
-                    getClass().getClassLoader().getResource("images/" + symbolName + ".png"));
+                    getClass().getClassLoader().getResource("resource/images/" + symbolName + ".png"));
     icon =
             new ImageIcon(
                     icon.getImage()
