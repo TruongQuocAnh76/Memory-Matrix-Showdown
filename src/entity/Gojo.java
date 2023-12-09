@@ -11,9 +11,9 @@ import module.Symbols;
 
 public class Gojo extends Entity {
   private final int X_COORDINATE = -50;
-  private final int Y_COORDINATE = 100;
+  private final int Y_COORDINATE = 120;
   private final int WIDTH = 500;
-  private final int HEIGHT = 750;
+  private final int HEIGHT = 600;
   private BufferedImage heartFullSprite;
   private BufferedImage heartNullSprite;
   private Stack<Symbols> spells = new Stack<>();
@@ -62,6 +62,9 @@ public class Gojo extends Entity {
 
   public void setState(int state) {
     this.state = state;
+  }
+  public int getHealth() {
+    return health;
   }
 
   public void draw(Graphics2D g2) {

@@ -20,8 +20,8 @@ public class GamePanel extends JPanel {
         public void paintComponent(Graphics g) {
           super.paintComponent(g);
           Graphics2D g2 = (Graphics2D) g;
-          g2.setFont(new Font("Arial", Font.BOLD, 100));
-          g2.drawString(timer.getTime() + "", 97, 160);
+          g2.setFont(new Font("Arial", Font.BOLD, 80));
+          g2.drawString(timer.getTime() + "", 78, 128);
         }
       };
   private boolean isMemorizePhase = true;
@@ -42,9 +42,9 @@ public class GamePanel extends JPanel {
         new ImageIcon(getClass().getClassLoader().getResource("images/background.png")).getImage();
 
     ImageIcon clock = new ImageIcon(getClass().getClassLoader().getResource("images/clock.png"));
-    clock = new ImageIcon(clock.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH));
+    clock = new ImageIcon(clock.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
     clockLabel.setIcon(clock);
-    clockLabel.setBounds(-40, 850, 250, 250);
+    clockLabel.setBounds(-40, 750, 200, 200);
     this.add(clockLabel);
 
     JLabel exitButton = new JLabel();
@@ -52,9 +52,9 @@ public class GamePanel extends JPanel {
     exitButton.setName("back");
 ImageIcon exitIcon =
         new ImageIcon(getClass().getClassLoader().getResource("images/exit_button.png"));
-    exitIcon = new ImageIcon(exitIcon.getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH));
+    exitIcon = new ImageIcon(exitIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH));
     exitButton.setIcon(exitIcon);
-    exitButton.setBounds(1600, 850, 400, 400);
+    exitButton.setBounds(1500, 800, 300, 300);
     exitButton.addMouseListener(view.mouseController);
     this.add(exitButton);
   }
@@ -66,23 +66,24 @@ ImageIcon exitIcon =
     JLabel inputTable = new JLabel();
     ImageIcon icon =
         new ImageIcon(getClass().getClassLoader().getResource("images/symbol_table.png"));
-    icon = new ImageIcon(icon.getImage().getScaledInstance(1500, 1500, Image.SCALE_SMOOTH));
+    icon = new ImageIcon(icon.getImage().getScaledInstance(1200, 1000, Image.SCALE_SMOOTH));
     inputTable.setIcon(icon);
-    inputPanel.setBounds(200, 250, 1500, 1300);
+    inputPanel.setBounds(270, 400, 1200, 1200);
     inputPanel.add(inputTable);
 
     for (int i = 1; i <= 6; i++) {
       JLabel symbol = new JLabel();
       symbol.addMouseListener(view.mouseController);
+      symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       symbol.setName("symbol" + i);
       icon = new ImageIcon(getClass().getClassLoader().getResource("images/symbol" + i + ".png"));
       icon =
           new ImageIcon(
               icon.getImage()
                   .getScaledInstance(
-                      icon.getIconWidth() / 3, icon.getIconHeight() / 3, Image.SCALE_SMOOTH));
+                      icon.getIconWidth() / 4, icon.getIconHeight() / 4, Image.SCALE_SMOOTH));
       symbol.setIcon(icon);
-      symbol.setBounds(30 + (i - 1) * 220, 450, icon.getIconWidth(), icon.getIconHeight());
+      symbol.setBounds(50 + (i - 1) * 170, 280, icon.getIconWidth(), icon.getIconHeight());
       inputTable.add(symbol);
     }
     this.add(inputPanel);
@@ -94,11 +95,11 @@ ImageIcon exitIcon =
     symbolPanel.setBackground(
         new Color(
             0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
-    symbolPanel.setBounds(300, 0, 1200, 1200);
+    symbolPanel.setBounds(300, 150, 1000, 800);
     ImageIcon weaknessIcon =
         new ImageIcon(getClass().getClassLoader().getResource("images/symbol_table.png"));
     weaknessIcon =
-        new ImageIcon(weaknessIcon.getImage().getScaledInstance(1200, 1200, Image.SCALE_SMOOTH));
+        new ImageIcon(weaknessIcon.getImage().getScaledInstance(1000, 800, Image.SCALE_SMOOTH));
     symbolTable.setIcon(weaknessIcon);
     symbolPanel.add(symbolTable);
     this.add(symbolPanel);
@@ -145,6 +146,7 @@ ImageIcon exitIcon =
     symbolTable.removeAll(); // remove all previous symbols
     for (int i = 0; i < 5; i++) {
       JLabel symbol = new JLabel();
+      symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       symbol.addMouseListener(view.mouseController);
       symbol.setName("weakness" + i);
       ImageIcon icon =
@@ -154,9 +156,9 @@ ImageIcon exitIcon =
           new ImageIcon(
               icon.getImage()
                   .getScaledInstance(
-                      icon.getIconWidth() / 4, icon.getIconHeight() / 4, Image.SCALE_SMOOTH));
+                      icon.getIconWidth() / 5, icon.getIconHeight() / 5, Image.SCALE_SMOOTH));
       symbol.setIcon(icon);
-      symbol.setBounds(30 + (i * 220), 358, icon.getIconWidth(), icon.getIconHeight());
+      symbol.setBounds(50 + (i * 170), 225, icon.getIconWidth(), icon.getIconHeight());
       symbolTable.add(symbol);
     }
     // starts memorize phase countdown
@@ -203,6 +205,8 @@ ImageIcon exitIcon =
         gojo.attack(correct, dragon);
         dragon.attack(gojo);
     }
+
+//    if(gojo.getHealth() == 0) view.changePanel("endScreen");
   }
 
   private void memorizePhase(Graphics2D g2) {
@@ -234,6 +238,7 @@ ImageIcon exitIcon =
   public void castSpell(String symbolName) {
     // add inputted symbol to table
     JLabel symbol = new JLabel();
+    symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     symbol.setName("input" + symbolName);
     ImageIcon icon =
             new ImageIcon(
@@ -242,9 +247,9 @@ ImageIcon exitIcon =
             new ImageIcon(
                     icon.getImage()
                             .getScaledInstance(
-                                    icon.getIconWidth() / 4, icon.getIconHeight() / 4, Image.SCALE_SMOOTH));
+                                    icon.getIconWidth() / 5, icon.getIconHeight() / 5, Image.SCALE_SMOOTH));
     symbol.setIcon(icon);
-    symbol.setBounds(30 + (gojo.getSpells().size() * 220), 358, icon.getIconWidth(), icon.getIconHeight());
+    symbol.setBounds(50 + (gojo.getSpells().size() * 170), 225, icon.getIconWidth(), icon.getIconHeight());
     symbolTable.add(symbol);
 
     gojo.castSpell(symbolName);

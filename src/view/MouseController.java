@@ -40,6 +40,7 @@ public class MouseController implements MouseListener {
       case "symbol6":
         this.view.gamePanel.castSpell(panel.getName());
         break;
+      default : this.view.changePanel("mainMenu");
     }
   }
 

@@ -10,6 +10,11 @@ public class View extends JFrame implements Runnable {
   private CardLayout cardLayout = new CardLayout();
   private Thread thread = new Thread(this);
   private JPanel mainMenu;
+  private JPanel endScreen;
+  // grid bag layout constants
+  public final int GRID_WIDTH = 200;
+  public final int GRID_HEIGHT = 100;
+  public final int MAX_GRID = 8; // 8x8
 
   public View() {
     init();
@@ -18,19 +23,15 @@ public class View extends JFrame implements Runnable {
   private void init() {
     setTitle("Memory Matrix Showdown");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setLocationRelativeTo(null);
     this.setLayout(cardLayout);
-    this.setResizable(true);
-    this.setUndecorated(true);
+    this.setResizable(false);
 
     mainMenuInit();
     gamePanelInit();
+    endScreenInit();
 
-    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
-    gd.setFullScreenWindow(this);
-
-    this.setMinimumSize(this.getSize());
     this.pack();
+    this.setLocationRelativeTo(null);
     this.setVisible(true);
 
     thread.start();
@@ -38,6 +39,7 @@ public class View extends JFrame implements Runnable {
 
   private void mainMenuInit() {
     mainMenu = new JPanel(new GridLayout());
+    mainMenu.setPreferredSize(new Dimension(GRID_WIDTH * MAX_GRID, GRID_HEIGHT * MAX_GRID));
     JLabel background = new JLabel();
     background.setLayout(new GridBagLayout());
     background.setIcon(
@@ -46,48 +48,44 @@ public class View extends JFrame implements Runnable {
     mainMenu.add(background);
     
     GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.BOTH;
 
-    JLabel title = getLabelButton("title", "images/game_name.png", 800, 100);
-    gbc.gridx = 1;
+    JLabel title = getLabelButton("title", "images/game_name.png", GRID_WIDTH * 4, GRID_HEIGHT * 2);
+    gbc.gridx = 3;
     gbc.gridy = 0;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = 3;
+    gbc.gridheight = 2;
     background.add(title, gbc);
 
-    gbc.gridwidth = 1;
-    JLabel startButton = getLabelButton("start", "images/start_button.png", 500, 400);
+    gbc.gridwidth = 2;
+    gbc.gridheight = 2;
+
+    JLabel startButton = getLabelButton("start", "images/start_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
     startButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    gbc.gridx = 1;
-    gbc.gridy = 2;
+    gbc.gridx = 2;
+    gbc.gridy = 3;
     background.add(startButton, gbc);
     startButton.addMouseListener(mouseController);
 
-    JLabel exitButton = getLabelButton("exit", "images/exit_button.png", 500, 400);
+    JLabel exitButton = getLabelButton("exit", "images/exit_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
     exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    gbc.gridx = 2;
-    gbc.gridy = 2;
+    gbc.gridx = 4;
+    gbc.gridy = 3;
     background.add(exitButton, gbc);
     exitButton.addMouseListener(mouseController);
 
     JLabel highScoreButton =
-        getLabelButton("highscore", "images/high_score_button.png", 500, 400);
+        getLabelButton("highscore", "images/high_score_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
     highScoreButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    gbc.gridx = 1;
-    gbc.gridy = 3;
+    gbc.gridx = 2;
+    gbc.gridy = 5;
     background.add(highScoreButton, gbc);
 
-    JLabel helpButton = getLabelButton("help", "images/info_button.png", 500, 400);
+    JLabel helpButton = getLabelButton("help", "images/info_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
     helpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    gbc.gridx = 2;
-    gbc.gridy = 3;
-    gbc.gridwidth = 1;
+    gbc.gridx = 4;
+    gbc.gridy = 5;
     background.add(helpButton, gbc);
-
-    JLabel empty = new JLabel();
-    empty.setOpaque(false);
-    gbc.gridx = 3;
-    gbc.gridy = 3;
-    gbc.gridwidth = 1;
-    background.add(empty, gbc);
 
     this.add(mainMenu, "mainMenu");
   }
@@ -95,6 +93,22 @@ public class View extends JFrame implements Runnable {
   private void gamePanelInit() {
     gamePanel = new GamePanel(this);
     this.add(gamePanel, "gamePanel");
+  }
+  private void endScreenInit() {
+    endScreen = new JPanel(new BorderLayout());
+    JLabel image = new JLabel();
+    image.setName("dmfu");
+    image.addMouseListener(mouseController);
+    ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("images/gojo_dead.png"));
+    icon = new ImageIcon(icon.getImage().getScaledInstance(GRID_WIDTH * MAX_GRID, GRID_HEIGHT * MAX_GRID, Image.SCALE_SMOOTH));
+    image.setIcon(icon);
+    endScreen.add(image, BorderLayout.CENTER);
+    JLabel text = new JLabel("Datte kimi, suyoi mo", SwingConstants.CENTER);
+    text.setName("text");
+    text.addMouseListener(mouseController);
+    text.setFont(new Font("Arial", Font.BOLD, 80));
+    endScreen.add(text, BorderLayout.SOUTH);
+    this.add(endScreen, "endScreen");
   }
 
   private JLabel getLabelButton(String name, String path, int width, int height) {
