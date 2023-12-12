@@ -10,8 +10,8 @@ import javax.swing.*;
 import module.Symbols;
 
 public class Gojo extends Entity {
-  private final int X_COORDINATE = 100;
-  private final int Y_COORDINATE = 220;
+  private final int X_COORDINATE = 50;
+  private final int Y_COORDINATE = 110;
   private final int WIDTH = 500;
   private final int HEIGHT = 600;
   private BufferedImage heartFullSprite;

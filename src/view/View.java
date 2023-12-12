@@ -1,15 +1,6 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class View extends JFrame implements Runnable {
@@ -62,7 +53,7 @@ public class View extends JFrame implements Runnable {
 
     JLabel title = getLabelButton("title", "resource/images/game_name.png", GRID_WIDTH * 4, GRID_HEIGHT * 2);
     gbc.gridx = 3;
-    gbc.gridy = 0;
+    gbc.gridy = 1;
     gbc.gridwidth = 3;
     gbc.gridheight = 2;
     background.add(title, gbc);

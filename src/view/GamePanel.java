@@ -44,7 +44,7 @@ public class GamePanel extends JPanel {
     ImageIcon clock = new ImageIcon(getClass().getClassLoader().getResource("resource/images/clock.png"));
     clock = new ImageIcon(clock.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
     clockLabel.setIcon(clock);
-    clockLabel.setBounds(-30, 750, 200, 200);
+    clockLabel.setBounds(-20, 700, 200, 200);
     this.add(clockLabel);
 
     JLabel exitButton = new JLabel();
@@ -54,7 +54,7 @@ public class GamePanel extends JPanel {
             new ImageIcon(getClass().getClassLoader().getResource("resource/images/exit_button.png"));
     exitIcon = new ImageIcon(exitIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH));
     exitButton.setIcon(exitIcon);
-    exitButton.setBounds(1500, 800, 300, 300);
+    exitButton.setBounds(1350, 700, 300, 300);
     exitButton.addMouseListener(view.mouseController);
     this.add(exitButton);
   }
@@ -68,7 +68,7 @@ public class GamePanel extends JPanel {
             new ImageIcon(getClass().getClassLoader().getResource("resource/images/symbol_table.png"));
     icon = new ImageIcon(icon.getImage().getScaledInstance(1200, 1000, Image.SCALE_SMOOTH));
     inputTable.setIcon(icon);
-    inputPanel.setBounds(270, 400, 1200, 1200);
+    inputPanel.setBounds(200, 350, 1200, 1200);
     inputPanel.add(inputTable);
 
     for (int i = 1; i <= 6; i++) {

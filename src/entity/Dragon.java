@@ -6,11 +6,13 @@ import java.util.Stack;
 import javax.imageio.ImageIO;
 import module.Symbols;
 
+
 public class Dragon extends Entity {
-  private final int X_COORDINATE = 1150;
+  private final int X_COORDINATE = 800;
   private final int Y_COORDINATE = 100;
   private final int WIDTH = 800;
   private final int HEIGHT = 700;
+
 
   private Stack<Symbols> weakness = new Stack<>(); // store dragon weakness this turn
 
