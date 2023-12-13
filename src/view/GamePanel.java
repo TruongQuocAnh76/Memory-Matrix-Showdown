@@ -35,7 +35,7 @@ public class GamePanel extends JPanel implements Runnable {
   private boolean isCastingPhase = false;
   private JLabel symbolTable = new JLabel();
   private JPanel inputPanel = new JPanel();
-  private int score = 0;
+  public int score = 0;
 
   private JLabel scoreLabel = new JLabel();
   private Thread thread = new Thread(this);
@@ -243,6 +243,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     if (gojo.getHealth() == 0) {
+      view.updateScore();
       view.changePanel("endScreen");
       stop();
     }
@@ -336,5 +337,9 @@ public class GamePanel extends JPanel implements Runnable {
       }
       repaint();
     }
+  }
+
+  public int getScore() {
+    return score;
   }
 }

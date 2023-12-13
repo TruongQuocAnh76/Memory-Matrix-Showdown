@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.*;
+import java.io.File;
 import javax.swing.*;
 import sound.SoundManager;
 
@@ -137,11 +138,16 @@ public class View extends JFrame {
                     GRID_WIDTH * MAX_GRID, GRID_HEIGHT * MAX_GRID, Image.SCALE_SMOOTH));
     image.setIcon(icon);
     endScreen.add(image, BorderLayout.CENTER);
-    JLabel text = new JLabel("Datte kimi, suyoi mo", SwingConstants.CENTER);
+    JLabel text = new JLabel(gamePanel.score + "", SwingConstants.CENTER);
     text.addMouseListener(mouseController);
     text.setFont(new Font("Arial", Font.BOLD, 80));
     endScreen.add(text, BorderLayout.SOUTH);
     this.add(endScreen, "endScreen");
+  }
+
+  public void updateScore() {
+    JLabel text = (JLabel) endScreen.getComponent(1);
+    text.setText(gamePanel.score + "");
   }
 
   private JLabel getLabelButton(String name, String path, int width, int height) {
@@ -159,8 +165,6 @@ public class View extends JFrame {
   public void showHelpImage() {
     ImageIcon helpImageIcon =
         new ImageIcon(getClass().getClassLoader().getResource("resource/images/board.png"));
-    //    Image helpImage = helpImageIcon.getImage();
-    //    Image newHelpImage = helpImage.getScaledInstance(800, 800, Image.SCALE_SMOOTH);
 
     // Tạo một JFrame mới để hiển thị ảnh
     JFrame helpFrame = new JFrame("Help");
