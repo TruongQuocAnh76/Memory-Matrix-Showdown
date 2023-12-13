@@ -10,6 +10,9 @@ public class Symbols {
   public String getImagePath() {
     return "resource/images/symbol" + index + ".png";
   }
+  public int getIndex() {
+    return index;
+  }
 
   @Override
   public boolean equals(Object obj) {

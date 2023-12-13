@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Stack;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import module.Symbols;
 
 public class Gojo extends Entity {
@@ -30,27 +29,34 @@ public class Gojo extends Entity {
   private void loadSprites() {
     try {
       heartFullSprite =
-              ImageIO.read(
-                      getClass().getClassLoader().getResourceAsStream("resource/images/heart_full.png"));
-      heartNullSprite = ImageIO.read(getClass().getClassLoader().getResourceAsStream("resource/images/heart_null.png"));
+          ImageIO.read(
+              getClass().getClassLoader().getResourceAsStream("resource/images/heart_full.png"));
+      heartNullSprite =
+          ImageIO.read(
+              getClass().getClassLoader().getResourceAsStream("resource/images/heart_null.png"));
+      heartFullSprite = scaleImage(heartFullSprite, 200, 200);
+      heartNullSprite = scaleImage(heartNullSprite, 200, 200);
       for (int i = 0; i < MAX_SPRITE_NUMBER; i++) {
         idleSprite[i] =
-                ImageIO.read(
-                        getClass()
-                                .getClassLoader()
-                                .getResourceAsStream("resource/images/gojo_idle" + (i + 1) + ".png"));
+            ImageIO.read(
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("resource/images/gojo_idle" + (i + 1) + ".png"));
         attackSprite[i] =
-                ImageIO.read(
-                        getClass()
-                                .getClassLoader()
-                                .getResourceAsStream("resource/images/gojo_attack" + (i + 1) + ".png"));
+            ImageIO.read(
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("resource/images/gojo_attack" + (i + 1) + ".png"));
         hurtSprite[i] =
-                ImageIO.read(
-                        getClass()
-                                .getClassLoader()
-                                .getResourceAsStream("resource/images/gojo_hurt" + (i + 1) + ".png"));
+            ImageIO.read(
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("resource/images/gojo_hurt" + (i + 1) + ".png"));
+
+        idleSprite[i] = scaleImage(idleSprite[i], WIDTH, HEIGHT);
+        attackSprite[i] = scaleImage(attackSprite[i], WIDTH, HEIGHT);
+        hurtSprite[i] = scaleImage(hurtSprite[i], WIDTH, HEIGHT);
       }
-      //TODO: scale these image to the right size for optimal performance
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -63,6 +69,7 @@ public class Gojo extends Entity {
   public void setState(int state) {
     this.state = state;
   }
+
   public int getHealth() {
     return health;
   }
@@ -94,16 +101,18 @@ public class Gojo extends Entity {
     }
     spriteTime++;
     spriteTime %= SPRITE_INTERVAL + 1;
-    g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null);
-
+    g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, null);
+    // g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null);
     // draw health bar
     int i = 1;
-    while(i <= health) {
-      g2.drawImage(heartFullSprite, 150 * i - 150, 0, 200, 200, null);
+    while (i <= health) {
+      g2.drawImage(heartFullSprite, 150 * i - 150, 0, null);
+      //      g2.drawImage(heartFullSprite, 150 * i - 150, 0, 200, 200, null);
       i++;
     }
-    while(i <= 3) {
-      g2.drawImage(heartNullSprite, 150 * i - 150, 0, 200, 200, null);
+    while (i <= 3) {
+      g2.drawImage(heartNullSprite, 150 * i - 150, 0, null);
+      //      g2.drawImage(heartNullSprite, 150 * i - 150, 0, 200, 200, null);
       i++;
     }
   }

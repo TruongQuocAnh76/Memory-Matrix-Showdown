@@ -48,7 +48,9 @@ public class Dragon extends Entity {
                                 .getClassLoader()
                                 .getResourceAsStream("resource/images/dragonhurt" + (i + 1) + ".png"));
 
-        // TODO: optimize this
+        idleSprite[i] = scaleImage(idleSprite[i], WIDTH, HEIGHT);
+        attackSprite[i] = scaleImage(attackSprite[i], WIDTH, HEIGHT);
+        hurtSprite[i] = scaleImage(hurtSprite[i], WIDTH, HEIGHT);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -82,6 +84,7 @@ public class Dragon extends Entity {
     }
     spriteTime++;
     spriteTime %= SPRITE_INTERVAL + 1;
+//    g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, null);
     g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null);
   }
 

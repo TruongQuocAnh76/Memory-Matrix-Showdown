@@ -1,4 +1,5 @@
 package entity;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Entity {
@@ -14,6 +15,14 @@ public class Entity {
 
   public Entity(int health) {
     this.health = health;
+  }
+  public BufferedImage scaleImage(BufferedImage org, int width, int height) {
+    BufferedImage scaled = new BufferedImage(width, height, org.getType());
+    Graphics2D g2 = scaled.createGraphics();
+    g2.drawImage(org, 0, 0, width, height, null);
+    g2.dispose();
+
+    return scaled;
   }
 }
 

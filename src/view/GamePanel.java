@@ -4,6 +4,7 @@ import entity.*;
 import java.awt.*;
 import javax.swing.*;
 import module.Countdown;
+import module.InGameSpriteManager;
 import module.Symbols;
 
 @SuppressWarnings("all")
@@ -14,6 +15,7 @@ public class GamePanel extends JPanel {
   private Dragon dragon = new Dragon(100);
   private Image backgroundImage;
   private Countdown timer = new Countdown();
+  private InGameSpriteManager spriteManager = new InGameSpriteManager();
   public JLabel clockLabel =
           new JLabel() {
             @Override
@@ -31,6 +33,8 @@ public class GamePanel extends JPanel {
   private JLabel symbolTable = new JLabel();
 
   private JPanel inputPanel = new JPanel();
+
+  private final int DEFAULT_SYMBOL_SIZE = 1024;
 
   public GamePanel(View view) {
     this.view = view;
@@ -64,43 +68,33 @@ public class GamePanel extends JPanel {
     inputPanel.setOpaque(false);
 
     JLabel inputTable = new JLabel();
-    ImageIcon icon =
-            new ImageIcon(getClass().getClassLoader().getResource("resource/images/symbol_table.png"));
-    icon = new ImageIcon(icon.getImage().getScaledInstance(1200, 1000, Image.SCALE_SMOOTH));
-    inputTable.setIcon(icon);
-    inputPanel.setBounds(200, 350, 1200, 1200);
+    spriteManager.setTableSpriteSize(1200, 1000);
+    inputTable.setIcon(spriteManager.getTableSprite());
+    inputPanel.setBounds(200, 350, 1200, 1000);
     inputPanel.add(inputTable);
 
+    spriteManager.setSymbolSpriteSize(DEFAULT_SYMBOL_SIZE / 4, DEFAULT_SYMBOL_SIZE / 4);
     for (int i = 1; i <= 6; i++) {
       JLabel symbol = new JLabel();
       symbol.addMouseListener(view.mouseController);
       symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       symbol.setName("symbol" + i);
-      icon = new ImageIcon(getClass().getClassLoader().getResource("resource/images/symbol" + i + ".png"));
-      icon =
-              new ImageIcon(
-                      icon.getImage()
-                              .getScaledInstance(
-                                      icon.getIconWidth() / 4, icon.getIconHeight() / 4, Image.SCALE_SMOOTH));
-      symbol.setIcon(icon);
-      symbol.setBounds(50 + (i - 1) * 170, 280, icon.getIconWidth(), icon.getIconHeight());
+      symbol.setIcon(spriteManager.getSymbolSprite(i));
+      symbol.setBounds(50 + (i - 1) * 170, 280, DEFAULT_SYMBOL_SIZE / 4, DEFAULT_SYMBOL_SIZE / 4);
       inputTable.add(symbol);
     }
     this.add(inputPanel);
 
+
     // table to display weakness
     symbolTable.setLayout(null);
 
-    symbolPanel.setBackground(Color.BLACK);
     symbolPanel.setBackground(
             new Color(
                     0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
     symbolPanel.setBounds(300, 150, 1000, 800);
-    ImageIcon weaknessIcon =
-            new ImageIcon(getClass().getClassLoader().getResource("resource/images/symbol_table.png"));
-    weaknessIcon =
-            new ImageIcon(weaknessIcon.getImage().getScaledInstance(1000, 800, Image.SCALE_SMOOTH));
-    symbolTable.setIcon(weaknessIcon);
+    spriteManager.setTableSpriteSize(1000, 800);
+    symbolTable.setIcon(spriteManager.getTableSprite());
     symbolPanel.add(symbolTable);
     this.add(symbolPanel);
   }
@@ -144,21 +138,13 @@ public class GamePanel extends JPanel {
     dragon.revealWeakness();
     // adding weakness symbols to weakness table
     symbolTable.removeAll(); // remove all previous symbols
+    spriteManager.setSymbolSpriteSize(DEFAULT_SYMBOL_SIZE / 5, DEFAULT_SYMBOL_SIZE / 5);
     for (int i = 0; i < 5; i++) {
       JLabel symbol = new JLabel();
-      symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       symbol.addMouseListener(view.mouseController);
       symbol.setName("weakness" + i);
-      ImageIcon icon =
-              new ImageIcon(
-                      getClass().getClassLoader().getResource(dragon.getWeakness().get(i).getImagePath()));
-      icon =
-              new ImageIcon(
-                      icon.getImage()
-                              .getScaledInstance(
-                                      icon.getIconWidth() / 5, icon.getIconHeight() / 5, Image.SCALE_SMOOTH));
-      symbol.setIcon(icon);
-      symbol.setBounds(50 + (i * 170), 225, icon.getIconWidth(), icon.getIconHeight());
+      symbol.setIcon(spriteManager.getSymbolSprite(dragon.getWeakness().get(i).getIndex()));
+      symbol.setBounds(50 + (i * 170), 225, DEFAULT_SYMBOL_SIZE / 5, DEFAULT_SYMBOL_SIZE / 5);
       symbolTable.add(symbol);
     }
     // starts memorize phase countdown
@@ -237,19 +223,12 @@ public class GamePanel extends JPanel {
 
   public void castSpell(String symbolName) {
     // add inputted symbol to table
+    spriteManager.setSymbolSpriteSize(DEFAULT_SYMBOL_SIZE / 5, DEFAULT_SYMBOL_SIZE / 5);
     JLabel symbol = new JLabel();
     symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     symbol.setName("input" + symbolName);
-    ImageIcon icon =
-            new ImageIcon(
-                    getClass().getClassLoader().getResource("resource/images/" + symbolName + ".png"));
-    icon =
-            new ImageIcon(
-                    icon.getImage()
-                            .getScaledInstance(
-                                    icon.getIconWidth() / 5, icon.getIconHeight() / 5, Image.SCALE_SMOOTH));
-    symbol.setIcon(icon);
-    symbol.setBounds(50 + (gojo.getSpells().size() * 170), 225, icon.getIconWidth(), icon.getIconHeight());
+    symbol.setIcon(spriteManager.getSymbolSprite(Integer.parseInt(symbolName.substring(6))));
+    symbol.setBounds(50 + (gojo.getSpells().size() * 170), 225, DEFAULT_SYMBOL_SIZE / 5, DEFAULT_SYMBOL_SIZE / 5);
     symbolTable.add(symbol);
 
     gojo.castSpell(symbolName);

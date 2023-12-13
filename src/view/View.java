@@ -18,7 +18,6 @@ public class View extends JFrame implements Runnable {
 
   public View() {
     init();
-
   }
 
   private void init() {
@@ -58,38 +57,23 @@ public class View extends JFrame implements Runnable {
     gbc.gridheight = 2;
     background.add(title, gbc);
 
-    gbc.gridwidth = 2;
-    gbc.gridheight = 2;
-
-    JLabel startButton = getLabelButton("start", "resource/images/start_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
-    startButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    gbc.gridx = 2;
-    gbc.gridy = 3;
-    background.add(startButton, gbc);
-    startButton.addMouseListener(mouseController);
-
-    JLabel exitButton = getLabelButton("exit", "resource/images/exit_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
-    exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    gbc.gridx = 4;
-    gbc.gridy = 3;
-    background.add(exitButton, gbc);
-    exitButton.addMouseListener(mouseController);
-
-    JLabel highScoreButton =
-            getLabelButton("highscore", "resource/images/high_score_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
-    highScoreButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    gbc.gridx = 2;
-    gbc.gridy = 5;
-    background.add(highScoreButton, gbc);
-
-    JLabel helpButton = getLabelButton("help", "resource/images/info_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4);
-    helpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    gbc.gridx = 4;
-    gbc.gridy = 5;
-    background.add(helpButton, gbc);
-
+    addButton("start", "resource/images/start_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4, 2, 3, mouseController, background);
+    addButton("exit", "resource/images/exit_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4, 4, 3, mouseController, background);
+    addButton("highscore", "resource/images/high_score_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4, 2, 5, mouseController, background);
+    addButton("help", "resource/images/info_button.png", GRID_WIDTH * 2, GRID_HEIGHT * 4, 4, 5, mouseController, background);
 
     this.add(mainMenu, "mainMenu");
+  }
+  private void addButton(String name, String path, int width, int height, int gridx, int gridy, MouseController mouseController, JLabel background) {
+    JLabel button = getLabelButton(name, path, width, height);
+    button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridx = gridx;
+    gbc.gridy = gridy;
+    gbc.gridwidth = 2;
+    gbc.gridheight = 2;
+    background.add(button, gbc);
+    button.addMouseListener(mouseController);
   }
 
   private void gamePanelInit() {
