@@ -3,7 +3,9 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 
+
 public class View extends JFrame implements Runnable {
+
   private final int fps = 30;
   public MouseController mouseController = new MouseController(this);
   public GamePanel gamePanel;
@@ -108,9 +110,22 @@ public class View extends JFrame implements Runnable {
 
     return label;
   }
+  public void showHelpImage() {
+    ImageIcon helpImageIcon = new ImageIcon(getClass().getClassLoader().getResource("resource/images/board.png"));
+    Image helpImage = helpImageIcon.getImage();
+    Image newHelpImage = helpImage.getScaledInstance(800, 800, Image.SCALE_SMOOTH);
 
+    // Tạo một JFrame mới để hiển thị ảnh
+    JFrame helpFrame = new JFrame("Help");
+    JLabel helpLabel = new JLabel(new ImageIcon(newHelpImage));
+    helpFrame.getContentPane().add(helpLabel);
+    helpFrame.pack();
+    helpFrame.setLocationRelativeTo(null);
+    helpFrame.setVisible(true);
+  }
   public void changePanel(String panelName) {
     if(panelName.equals("gamePanel")) gamePanel.reset();
+
     cardLayout.show(this.getContentPane(), panelName);
   }
 
