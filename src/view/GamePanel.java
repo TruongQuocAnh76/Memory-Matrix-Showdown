@@ -37,6 +37,10 @@ public class GamePanel extends JPanel {
 
   private final int DEFAULT_SYMBOL_SIZE = 1024;
 
+  private int score = 0;  // Thêm biến điểm số
+
+  private JLabel scoreLabel = new JLabel();
+
   public GamePanel(View view) {
     this.view = view;
     this.setLayout(null);
@@ -79,9 +83,14 @@ public class GamePanel extends JPanel {
     removeButton.setBorderPainted(false);
 
     removeButton.setIcon(removeIcon);
-    removeButton.setBounds(1400, 600, 200, 200);
+    removeButton.setBounds(1400, 550, 200, 200);
     removeButton.addActionListener(e -> removeLastSymbol()); // Add action listener
     this.add(removeButton);
+
+    scoreLabel.setFont(new Font("Arial", Font.BOLD, 24));
+    scoreLabel.setForeground(Color.BLACK);
+    scoreLabel.setBounds(1400, 20, 300, 40);
+    this.add(scoreLabel);
   }
   private void removeLastSymbol() {
     if (!gojo.getSpells().isEmpty()) {
@@ -138,6 +147,10 @@ public class GamePanel extends JPanel {
     g2.drawImage(backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
     gojo.draw(g2);
     dragon.draw(g2);
+
+    g2.setColor(Color.WHITE);
+    g2.setFont(new Font("Arial", Font.BOLD, 24));
+    g2.drawString("Score: " + score, 1100, 50);
 
     if (isMemorizePhase) memorizePhase(g2);
     else if (isCastingPhase) castingPhase(g2);
@@ -203,6 +216,8 @@ public class GamePanel extends JPanel {
     symbolTable.setVisible(false);
     // starts attack phase countdown
     timer.countdown(Countdown.RESULT_TIME);
+    updateScoreLabel();
+    System.out.println("Score: " + score);  // Kiểm tra giá trị điểm số
   }
 
   private void checkInput() {
@@ -218,6 +233,7 @@ public class GamePanel extends JPanel {
         break;
       case 5:
         gojo.attack(correct, dragon);
+        score += 100; // Cộng 100 điểm nếu người chơi nhập đúng
         break;
       default:
         gojo.attack(correct, dragon);
@@ -225,6 +241,11 @@ public class GamePanel extends JPanel {
     }
 
     if(gojo.getHealth() == 0) view.changePanel("endScreen");
+  }
+
+  private void updateScoreLabel() {
+    // Cập nhật hiển thị điểm số trên label
+    scoreLabel.setText("Score: " + score);
   }
 
   private void memorizePhase(Graphics2D g2) {

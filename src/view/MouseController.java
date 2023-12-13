@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class MouseController implements MouseListener {
       case "help":
         // TODO
         System.out.println("help");
+      view.showHelpImage();
         break;
       case "back":
         view.changePanel("mainMenu");
