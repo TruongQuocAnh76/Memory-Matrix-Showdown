@@ -9,6 +9,7 @@ import module.Symbols;
 
 @SuppressWarnings("all")
 public class GamePanel extends JPanel {
+  private JButton removeButton;
   private boolean isStartOfTheGame = true;
   private View view;
   private Gojo gojo = new Gojo();
@@ -61,8 +62,39 @@ public class GamePanel extends JPanel {
     exitButton.setBounds(1350, 700, 300, 300);
     exitButton.addMouseListener(view.mouseController);
     this.add(exitButton);
-  }
 
+    // Create and configure the remove button with the transparent image
+    removeButton = new JButton();
+    removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    removeButton.setName("remove");
+
+    // Load the transparent image
+    ImageIcon removeIcon = new ImageIcon(
+            getClass().getClassLoader().getResource("resource/images/remove_button.png"));
+
+    // Ensure the image has a transparent background
+    removeIcon = new ImageIcon(removeIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+    // Set the button to be transparent
+    removeButton.setContentAreaFilled(false);
+    removeButton.setBorderPainted(false);
+
+    removeButton.setIcon(removeIcon);
+    removeButton.setBounds(1400, 600, 200, 200);
+    removeButton.addActionListener(e -> removeLastSymbol()); // Add action listener
+    this.add(removeButton);
+  }
+  private void removeLastSymbol() {
+    if (!gojo.getSpells().isEmpty()) {
+      gojo.getSpells().pop();  // Remove the last symbol from the stack
+      // Remove the last added symbol from the symbolTable
+      int lastSymbolIndex = symbolTable.getComponentCount() - 1;
+      if (lastSymbolIndex >= 0) {
+        symbolTable.remove(lastSymbolIndex);
+        symbolTable.revalidate();
+        symbolTable.repaint();
+      }
+    }
+  }
   private void addSymbolTable() {
     // table to receive player input
     inputPanel.setOpaque(false);
