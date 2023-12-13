@@ -14,10 +14,11 @@ public class MouseController implements MouseListener {
 
   @Override
   public void mouseClicked(MouseEvent e) {
-    JLabel panel = (JLabel) e.getSource();
-    switch (panel.getName()) {
+    JComponent component = (JComponent) e.getSource();
+    switch (component.getName()) {
       case "start":
         view.changePanel("gamePanel");
+        view.gamePanel.start();
         break;
       case "exit":
         view.exit();
@@ -28,11 +29,11 @@ public class MouseController implements MouseListener {
         break;
       case "help":
         // TODO
-        System.out.println("help");
-      view.showHelpImage();
+        view.showHelpImage();
         break;
       case "back":
         view.changePanel("mainMenu");
+        view.gamePanel.stop();
         break;
       case "symbol1":
       case "symbol2":
@@ -40,9 +41,10 @@ public class MouseController implements MouseListener {
       case "symbol4":
       case "symbol5":
       case "symbol6":
-        this.view.gamePanel.castSpell(panel.getName());
+        this.view.gamePanel.castSpell(component.getName());
         break;
-      default : this.view.changePanel("mainMenu");
+      default: // from end screen to main menu
+        this.view.changePanel("mainMenu");
     }
   }
 

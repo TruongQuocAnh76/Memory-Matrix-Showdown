@@ -5,10 +5,14 @@ import java.awt.*;
 import javax.swing.*;
 import module.Countdown;
 import module.InGameSpriteManager;
-import module.Symbols;
 
 @SuppressWarnings("all")
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements Runnable {
+  private final int fps = 30;
+
+  private final int DEFAULT_SYMBOL_SIZE = 1024;
+  // table to display weakness and user's input
+  JPanel symbolPanel = new JPanel();
   private JButton removeButton;
   private boolean isStartOfTheGame = true;
   private View view;
@@ -16,30 +20,25 @@ public class GamePanel extends JPanel {
   private Dragon dragon = new Dragon(100);
   private Image backgroundImage;
   private Countdown timer = new Countdown();
-  private InGameSpriteManager spriteManager = new InGameSpriteManager();
   public JLabel clockLabel =
-          new JLabel() {
-            @Override
-            public void paintComponent(Graphics g) {
-              super.paintComponent(g);
-              Graphics2D g2 = (Graphics2D) g;
-              g2.setFont(new Font("Arial", Font.BOLD, 80));
-              g2.drawString(timer.getTime() + "", 78, 128);
-            }
-          };
+      new JLabel() {
+        @Override
+        public void paintComponent(Graphics g) {
+          super.paintComponent(g);
+          Graphics2D g2 = (Graphics2D) g;
+          g2.setFont(new Font("Arial", Font.BOLD, 80));
+          g2.drawString(timer.getTime() + "", 78, 128);
+        }
+      };
+  private InGameSpriteManager spriteManager = new InGameSpriteManager();
   private boolean isMemorizePhase = true;
   private boolean isCastingPhase = false;
-  // table to display weakness and user's input
-  JPanel symbolPanel = new JPanel();
   private JLabel symbolTable = new JLabel();
-
   private JPanel inputPanel = new JPanel();
-
-  private final int DEFAULT_SYMBOL_SIZE = 1024;
-
-  private int score = 0;  // Thêm biến điểm số
+  private int score = 0;
 
   private JLabel scoreLabel = new JLabel();
+  private Thread thread = new Thread(this);
 
   public GamePanel(View view) {
     this.view = view;
@@ -48,9 +47,11 @@ public class GamePanel extends JPanel {
     addSymbolTable();
 
     this.backgroundImage =
-            new ImageIcon(getClass().getClassLoader().getResource("resource/images/background.png")).getImage();
+        new ImageIcon(getClass().getClassLoader().getResource("resource/images/background.png"))
+            .getImage();
 
-    ImageIcon clock = new ImageIcon(getClass().getClassLoader().getResource("resource/images/clock.png"));
+    ImageIcon clock =
+        new ImageIcon(getClass().getClassLoader().getResource("resource/images/clock.png"));
     clock = new ImageIcon(clock.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
     clockLabel.setIcon(clock);
     clockLabel.setBounds(-20, 700, 200, 200);
@@ -60,7 +61,7 @@ public class GamePanel extends JPanel {
     exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     exitButton.setName("back");
     ImageIcon exitIcon =
-            new ImageIcon(getClass().getClassLoader().getResource("resource/images/exit_button.png"));
+        new ImageIcon(getClass().getClassLoader().getResource("resource/images/exit_button.png"));
     exitIcon = new ImageIcon(exitIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH));
     exitButton.setIcon(exitIcon);
     exitButton.setBounds(1350, 700, 300, 300);
@@ -73,11 +74,12 @@ public class GamePanel extends JPanel {
     removeButton.setName("remove");
 
     // Load the transparent image
-    ImageIcon removeIcon = new ImageIcon(
-            getClass().getClassLoader().getResource("resource/images/remove_button.png"));
+    ImageIcon removeIcon =
+        new ImageIcon(getClass().getClassLoader().getResource("resource/images/remove_button.png"));
 
     // Ensure the image has a transparent background
-    removeIcon = new ImageIcon(removeIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+    removeIcon =
+        new ImageIcon(removeIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
     // Set the button to be transparent
     removeButton.setContentAreaFilled(false);
     removeButton.setBorderPainted(false);
@@ -92,18 +94,20 @@ public class GamePanel extends JPanel {
     scoreLabel.setBounds(1400, 20, 300, 40);
     this.add(scoreLabel);
   }
+
   private void removeLastSymbol() {
     if (!gojo.getSpells().isEmpty()) {
-      gojo.getSpells().pop();  // Remove the last symbol from the stack
+      gojo.getSpells().pop(); // Remove the last symbol from the stack
       // Remove the last added symbol from the symbolTable
       int lastSymbolIndex = symbolTable.getComponentCount() - 1;
       if (lastSymbolIndex >= 0) {
         symbolTable.remove(lastSymbolIndex);
-        symbolTable.revalidate();
-        symbolTable.repaint();
+        //        symbolTable.revalidate();
+        //        symbolTable.repaint();
       }
     }
   }
+
   private void addSymbolTable() {
     // table to receive player input
     inputPanel.setOpaque(false);
@@ -126,13 +130,12 @@ public class GamePanel extends JPanel {
     }
     this.add(inputPanel);
 
-
     // table to display weakness
     symbolTable.setLayout(null);
 
     symbolPanel.setBackground(
-            new Color(
-                    0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
+        new Color(
+            0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
     symbolPanel.setBounds(300, 150, 1000, 800);
     spriteManager.setTableSpriteSize(1000, 800);
     symbolTable.setIcon(spriteManager.getTableSprite());
@@ -151,14 +154,9 @@ public class GamePanel extends JPanel {
     g2.setColor(Color.WHITE);
     g2.setFont(new Font("Arial", Font.BOLD, 24));
     g2.drawString("Score: " + score, 1100, 50);
-
-    if (isMemorizePhase) memorizePhase(g2);
-    else if (isCastingPhase) castingPhase(g2);
-    else // otherwise is attack phase (cause gojo needs to get sliced up for more than 2 sec
-      attackPhase(g2);
   }
 
-  private void attackPhase(Graphics2D g2) {
+  private void attackPhase() {
     if (!timer.isCounting()) { // end of attack phase, back to memorize phase
       // stop counting
       timer.stopCounting();
@@ -175,8 +173,7 @@ public class GamePanel extends JPanel {
   private void memorizePhaseSetup() {
     // show weakness table
     symbolTable.setVisible(true);
-    symbolPanel.setVisible(
-            true); // as the panel is the parent of the table, it must be visible too
+    symbolPanel.setVisible(true); // as the panel is the parent of the table, it must be visible too
 
     inputPanel.setVisible(false); // hide input table
 
@@ -196,9 +193,9 @@ public class GamePanel extends JPanel {
     timer.countdown(Countdown.MEMORIZE_TIME);
   }
 
-  private void castingPhase(Graphics2D g2) {
+  private void castingPhase() {
     if (!timer.isCounting()
-            || gojo.getSpells().size() == 5) { // if time's up or player has done inputting
+        || gojo.getSpells().size() == 5) { // if time's up or player has done inputting
       // transit to attack phase, stop counting if there are time remaining (the moon is not red)
       isCastingPhase = false;
       timer.stopCounting();
@@ -217,7 +214,7 @@ public class GamePanel extends JPanel {
     // starts attack phase countdown
     timer.countdown(Countdown.RESULT_TIME);
     updateScoreLabel();
-    System.out.println("Score: " + score);  // Kiểm tra giá trị điểm số
+    System.out.println("Score: " + score); // Kiểm tra giá trị điểm số
   }
 
   private void checkInput() {
@@ -230,17 +227,27 @@ public class GamePanel extends JPanel {
     switch (correct) {
       case 0:
         dragon.attack(gojo);
+        view.soundManager.playDragonAttack();
+        view.soundManager.playGojoHurt();
         break;
       case 5:
         gojo.attack(correct, dragon);
-        score += 100; // Cộng 100 điểm nếu người chơi nhập đúng
+        view.soundManager.playGojoAttack();
         break;
       default:
         gojo.attack(correct, dragon);
+        view.soundManager.playGojoAttack();
         dragon.attack(gojo);
+        view.soundManager.playDragonAttack();
+        view.soundManager.playGojoHurt();
     }
 
-    if(gojo.getHealth() == 0) view.changePanel("endScreen");
+    if (gojo.getHealth() == 0) {
+      view.changePanel("endScreen");
+      stop();
+    }
+
+    score += correct * 100;
   }
 
   private void updateScoreLabel() {
@@ -248,7 +255,7 @@ public class GamePanel extends JPanel {
     scoreLabel.setText("Score: " + score);
   }
 
-  private void memorizePhase(Graphics2D g2) {
+  private void memorizePhase() {
     if (isStartOfTheGame) {
       isStartOfTheGame = false;
       memorizePhaseSetup();
@@ -262,7 +269,6 @@ public class GamePanel extends JPanel {
 
       castingPhaseSetup();
     }
-    // draw remaining time
   }
 
   private void castingPhaseSetup() {
@@ -281,16 +287,20 @@ public class GamePanel extends JPanel {
     symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     symbol.setName("input" + symbolName);
     symbol.setIcon(spriteManager.getSymbolSprite(Integer.parseInt(symbolName.substring(6))));
-    symbol.setBounds(50 + (gojo.getSpells().size() * 170), 225, DEFAULT_SYMBOL_SIZE / 5, DEFAULT_SYMBOL_SIZE / 5);
+    symbol.setBounds(
+        50 + (gojo.getSpells().size() * 170),
+        225,
+        DEFAULT_SYMBOL_SIZE / 5,
+        DEFAULT_SYMBOL_SIZE / 5);
     symbolTable.add(symbol);
 
     gojo.castSpell(symbolName);
   }
-  /**
-   * reset the game (when user start the game after pressing the back button)
-   */
+
+  /** reset the game (when user start the game after pressing the back button) */
   public void reset() {
     isStartOfTheGame = true;
+    thread = new Thread(this);
     gojo = new Gojo();
     dragon = new Dragon(100);
     timer = new Countdown();
@@ -298,5 +308,33 @@ public class GamePanel extends JPanel {
     isCastingPhase = false;
     symbolPanel.setVisible(false);
     inputPanel.setVisible(false);
+  }
+
+  public void start() {
+    thread.start();
+  }
+
+  /** exit game, stop the game thread and reset the game for next time */
+  public void stop() {
+    thread.interrupt();
+  }
+
+  @Override
+  public void run() {
+    while (!thread.isInterrupted()) {
+      if (isMemorizePhase) memorizePhase();
+      else if (isCastingPhase) castingPhase();
+      else attackPhase();
+
+      int rand = (int) (Math.random() * 10000);
+      if (rand == 69) view.soundManager.playGojoIdle();
+      else if (rand == 420) view.soundManager.playDragonIdle();
+      try {
+        Thread.sleep(1000 / fps);
+      } catch (InterruptedException e) {
+        thread.interrupt();
+      }
+      repaint();
+    }
   }
 }
