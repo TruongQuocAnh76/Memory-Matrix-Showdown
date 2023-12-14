@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import module.Countdown;
 import module.InGameSpriteManager;
+import module.ScoreManager;
 
 @SuppressWarnings("all")
 public class GamePanel extends JPanel implements Runnable {
@@ -26,8 +27,8 @@ public class GamePanel extends JPanel implements Runnable {
         public void paintComponent(Graphics g) {
           super.paintComponent(g);
           Graphics2D g2 = (Graphics2D) g;
-          g2.setFont(new Font("Arial", Font.BOLD, 80));
-          g2.drawString(timer.getTime() + "", 78, 128);
+          g2.setFont(view.gameFont.deriveFont(Font.BOLD, 80));
+          g2.drawString(timer.getTime() + "", 80, 122);
         }
       };
   private InGameSpriteManager spriteManager = new InGameSpriteManager();
@@ -71,7 +72,7 @@ public class GamePanel extends JPanel implements Runnable {
     // Create and configure the remove button with the transparent image
     removeButton = new JButton();
     removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    removeButton.setName("remove");
+    removeButton.setName("removeButton");
 
     // Load the transparent image
     ImageIcon removeIcon =
@@ -86,16 +87,16 @@ public class GamePanel extends JPanel implements Runnable {
 
     removeButton.setIcon(removeIcon);
     removeButton.setBounds(1400, 550, 200, 200);
-    removeButton.addActionListener(e -> removeLastSymbol()); // Add action listener
+    removeButton.addMouseListener(view.mouseController);
     this.add(removeButton);
 
-    scoreLabel.setFont(new Font("Arial", Font.BOLD, 24));
+    scoreLabel.setFont(view.gameFont.deriveFont(Font.BOLD, 24));
     scoreLabel.setForeground(Color.BLACK);
     scoreLabel.setBounds(1400, 20, 300, 40);
     this.add(scoreLabel);
   }
 
-  private void removeLastSymbol() {
+  public void removeLastSymbol() {
     if (!gojo.getSpells().isEmpty()) {
       gojo.getSpells().pop(); // Remove the last symbol from the stack
       // Remove the last added symbol from the symbolTable
@@ -165,6 +166,14 @@ public class GamePanel extends JPanel implements Runnable {
       // change state of entities to idle
       gojo.setState(Entity.IDLE);
       dragon.setState(Entity.IDLE);
+
+      // check if game is over
+      if (gojo.getHealth() == 0) {
+        view.updateScore();
+        view.changePanel("endScreen");
+        stop();
+      }
+
 
       memorizePhaseSetup();
     }
@@ -240,12 +249,6 @@ public class GamePanel extends JPanel implements Runnable {
         dragon.attack(gojo);
         view.soundManager.playDragonAttack();
         view.soundManager.playGojoHurt();
-    }
-
-    if (gojo.getHealth() == 0) {
-      view.updateScore();
-      view.changePanel("endScreen");
-      stop();
     }
 
     score += correct * 100;
@@ -333,7 +336,7 @@ public class GamePanel extends JPanel implements Runnable {
       try {
         Thread.sleep(1000 / fps);
       } catch (InterruptedException e) {
-        thread.interrupt();
+        break;
       }
       repaint();
     }

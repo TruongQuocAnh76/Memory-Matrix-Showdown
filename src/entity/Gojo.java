@@ -18,7 +18,7 @@ public class Gojo extends Entity {
   private Stack<Symbols> spells = new Stack<>();
 
   public Gojo() {
-    super(3);
+    super(1);
     attack = 50;
     idleSprite = new BufferedImage[MAX_SPRITE_NUMBER];
     attackSprite = new BufferedImage[MAX_SPRITE_NUMBER];

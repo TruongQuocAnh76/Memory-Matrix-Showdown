@@ -11,7 +11,7 @@ public class SoundManager {
     try {
       AudioInputStream audioInputStream =
           AudioSystem.getAudioInputStream(
-              getClass().getClassLoader().getResource("resource/sounds/background.wav"));
+              getClass().getClassLoader().getResource("resource/sounds/bg.wav"));
       background = AudioSystem.getClip();
       background.open(audioInputStream);
 
@@ -50,6 +50,7 @@ public class SoundManager {
               getClass().getClassLoader().getResource("resource/sounds/gojo_win.wav"));
       gojoWin = AudioSystem.getClip();
       gojoWin.open(audioInputStream7);
+
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -59,7 +60,9 @@ public class SoundManager {
   }
 
   public void playBackground() {
-    restart(background);
+    int startFrame = 5 * (int) background.getFormat().getFrameRate(); // 5 seconds
+    background.setFramePosition(startFrame);
+    background.setLoopPoints(startFrame, -1);
     background.loop(Clip.LOOP_CONTINUOUSLY);
   }
 
