@@ -19,7 +19,7 @@ public class MouseController implements MouseListener {
       case "start":
         view.changePanel("gamePanel");
         view.gamePanel.start();
-        view.soundManager.stopBackground();
+
         break;
       case "exit":
         view.exit();
@@ -35,6 +35,10 @@ public class MouseController implements MouseListener {
       case "back":
         view.changePanel("mainMenu");
         view.gamePanel.stop();
+        break;
+      case "mute":
+        // TODO
+        view.soundManager.stopBackground();
         break;
       case "symbol1":
       case "symbol2":

@@ -115,6 +115,15 @@ public class View extends JFrame {
             5,
             mouseController,
             background);
+//    addButton(
+//            "mute",
+//            "resource/images/mute_sound.png",
+//            GRID_WIDTH * 2,
+//            GRID_HEIGHT * 4,
+//            3,
+//            7,
+//            mouseController,
+//            background);
 
     this.add(mainMenu, "mainMenu");
   }
