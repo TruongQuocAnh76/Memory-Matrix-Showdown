@@ -92,4 +92,9 @@ public class SoundManager {
     restart(gojoWin);
     gojoWin.start();
   }
+  public void stopBackground() {
+    if (background.isRunning()) {
+      background.stop();
+    }
+  }
 }

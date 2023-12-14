@@ -130,7 +130,7 @@ public class View extends JFrame {
     JLabel image = new JLabel();
     image.addMouseListener(mouseController);
     ImageIcon icon =
-        new ImageIcon(getClass().getClassLoader().getResource("resource/images/gojo_dead.png"));
+        new ImageIcon(getClass().getClassLoader().getResource("resource/images/game-over.png"));
     icon =
         new ImageIcon(
             icon.getImage()
@@ -143,6 +143,7 @@ public class View extends JFrame {
     text.setFont(new Font("Arial", Font.BOLD, 80));
     endScreen.add(text, BorderLayout.SOUTH);
     this.add(endScreen, "endScreen");
+
   }
 
   public void updateScore() {

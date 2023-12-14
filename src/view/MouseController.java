@@ -19,6 +19,7 @@ public class MouseController implements MouseListener {
       case "start":
         view.changePanel("gamePanel");
         view.gamePanel.start();
+        view.soundManager.stopBackground();
         break;
       case "exit":
         view.exit();
