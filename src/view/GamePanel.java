@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import module.Countdown;
 import module.InGameSpriteManager;
+import module.ScoreManager;
 
 @SuppressWarnings("all")
 public class GamePanel extends JPanel implements Runnable {
@@ -21,15 +22,15 @@ public class GamePanel extends JPanel implements Runnable {
   private Image backgroundImage;
   private Countdown timer = new Countdown();
   public JLabel clockLabel =
-      new JLabel() {
-        @Override
-        public void paintComponent(Graphics g) {
-          super.paintComponent(g);
-          Graphics2D g2 = (Graphics2D) g;
-          g2.setFont(new Font("Arial", Font.BOLD, 80));
-          g2.drawString(timer.getTime() + "", 78, 128);
-        }
-      };
+          new JLabel() {
+            @Override
+            public void paintComponent(Graphics g) {
+              super.paintComponent(g);
+              Graphics2D g2 = (Graphics2D) g;
+              g2.setFont(view.gameFont.deriveFont(Font.BOLD, 80));
+              g2.drawString(timer.getTime() + "", 80, 122);
+            }
+          };
   private InGameSpriteManager spriteManager = new InGameSpriteManager();
   private boolean isMemorizePhase = true;
   private boolean isCastingPhase = false;
@@ -47,11 +48,11 @@ public class GamePanel extends JPanel implements Runnable {
     addSymbolTable();
 
     this.backgroundImage =
-        new ImageIcon(getClass().getClassLoader().getResource("resource/images/background.png"))
-            .getImage();
+            new ImageIcon(getClass().getClassLoader().getResource("resource/images/background.png"))
+                    .getImage();
 
     ImageIcon clock =
-        new ImageIcon(getClass().getClassLoader().getResource("resource/images/clock.png"));
+            new ImageIcon(getClass().getClassLoader().getResource("resource/images/clock.png"));
     clock = new ImageIcon(clock.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
     clockLabel.setIcon(clock);
     clockLabel.setBounds(-20, 700, 200, 200);
@@ -61,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
     exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     exitButton.setName("back");
     ImageIcon exitIcon =
-        new ImageIcon(getClass().getClassLoader().getResource("resource/images/exit_button.png"));
+            new ImageIcon(getClass().getClassLoader().getResource("resource/images/exit_button.png"));
     exitIcon = new ImageIcon(exitIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH));
     exitButton.setIcon(exitIcon);
     exitButton.setBounds(1350, 700, 300, 300);
@@ -71,31 +72,31 @@ public class GamePanel extends JPanel implements Runnable {
     // Create and configure the remove button with the transparent image
     removeButton = new JButton();
     removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    removeButton.setName("remove");
+    removeButton.setName("removeButton");
 
     // Load the transparent image
     ImageIcon removeIcon =
-        new ImageIcon(getClass().getClassLoader().getResource("resource/images/remove_button.png"));
+            new ImageIcon(getClass().getClassLoader().getResource("resource/images/remove_button.png"));
 
     // Ensure the image has a transparent background
     removeIcon =
-        new ImageIcon(removeIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+            new ImageIcon(removeIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
     // Set the button to be transparent
     removeButton.setContentAreaFilled(false);
     removeButton.setBorderPainted(false);
 
     removeButton.setIcon(removeIcon);
     removeButton.setBounds(1400, 550, 200, 200);
-    removeButton.addActionListener(e -> removeLastSymbol()); // Add action listener
+    removeButton.addMouseListener(view.mouseController);
     this.add(removeButton);
 
-    scoreLabel.setFont(new Font("Arial", Font.BOLD, 24));
+    scoreLabel.setFont(view.gameFont.deriveFont(Font.BOLD, 24));
     scoreLabel.setForeground(Color.BLACK);
     scoreLabel.setBounds(1400, 20, 300, 40);
     this.add(scoreLabel);
   }
 
-  private void removeLastSymbol() {
+  public void removeLastSymbol() {
     if (!gojo.getSpells().isEmpty()) {
       gojo.getSpells().pop(); // Remove the last symbol from the stack
       // Remove the last added symbol from the symbolTable
@@ -134,8 +135,8 @@ public class GamePanel extends JPanel implements Runnable {
     symbolTable.setLayout(null);
 
     symbolPanel.setBackground(
-        new Color(
-            0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
+            new Color(
+                    0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
     symbolPanel.setBounds(300, 150, 1000, 800);
     spriteManager.setTableSpriteSize(1000, 800);
     symbolTable.setIcon(spriteManager.getTableSprite());
@@ -166,6 +167,14 @@ public class GamePanel extends JPanel implements Runnable {
       gojo.setState(Entity.IDLE);
       dragon.setState(Entity.IDLE);
 
+      // check if game is over
+      if (gojo.getHealth() == 0) {
+        view.updateScore();
+        view.changePanel("endScreen");
+        stop();
+      }
+
+
       memorizePhaseSetup();
     }
   }
@@ -195,7 +204,7 @@ public class GamePanel extends JPanel implements Runnable {
 
   private void castingPhase() {
     if (!timer.isCounting()
-        || gojo.getSpells().size() == 5) { // if time's up or player has done inputting
+            || gojo.getSpells().size() == 5) { // if time's up or player has done inputting
       // transit to attack phase, stop counting if there are time remaining (the moon is not red)
       isCastingPhase = false;
       timer.stopCounting();
@@ -242,12 +251,6 @@ public class GamePanel extends JPanel implements Runnable {
         view.soundManager.playGojoHurt();
     }
 
-    if (gojo.getHealth() == 0) {
-      view.updateScore();
-      view.changePanel("endScreen");
-      stop();
-    }
-
     score += correct * 100;
   }
 
@@ -289,10 +292,10 @@ public class GamePanel extends JPanel implements Runnable {
     symbol.setName("input" + symbolName);
     symbol.setIcon(spriteManager.getSymbolSprite(Integer.parseInt(symbolName.substring(6))));
     symbol.setBounds(
-        50 + (gojo.getSpells().size() * 170),
-        225,
-        DEFAULT_SYMBOL_SIZE / 5,
-        DEFAULT_SYMBOL_SIZE / 5);
+            50 + (gojo.getSpells().size() * 170),
+            225,
+            DEFAULT_SYMBOL_SIZE / 5,
+            DEFAULT_SYMBOL_SIZE / 5);
     symbolTable.add(symbol);
 
     gojo.castSpell(symbolName);
@@ -309,6 +312,7 @@ public class GamePanel extends JPanel implements Runnable {
     isCastingPhase = false;
     symbolPanel.setVisible(false);
     inputPanel.setVisible(false);
+    score = 0;
   }
 
   public void start() {
@@ -327,13 +331,13 @@ public class GamePanel extends JPanel implements Runnable {
       else if (isCastingPhase) castingPhase();
       else attackPhase();
 
-      int rand = (int) (Math.random() * 10000);
+      int rand = (int) (Math.random() * 1000);
       if (rand == 69) view.soundManager.playGojoIdle();
       else if (rand == 420) view.soundManager.playDragonIdle();
       try {
         Thread.sleep(1000 / fps);
       } catch (InterruptedException e) {
-        thread.interrupt();
+        break;
       }
       repaint();
     }

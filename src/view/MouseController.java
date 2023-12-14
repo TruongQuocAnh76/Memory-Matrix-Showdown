@@ -26,11 +26,11 @@ public class MouseController implements MouseListener {
         break;
       case "highScore":
         // TODO
-        System.out.println("highScore");
+        view.changePanel("highScore");
         break;
       case "help":
         // TODO
-        view.showHelpImage();
+        view.changePanel("helpScreen");
         break;
       case "back":
         view.changePanel("mainMenu");
@@ -44,6 +44,7 @@ public class MouseController implements MouseListener {
       case "symbol6":
         this.view.gamePanel.castSpell(component.getName());
         break;
+      case "remove": view.gamePanel.removeLastSymbol(); break;
       default: // from end screen to main menu
         this.view.changePanel("mainMenu");
     }

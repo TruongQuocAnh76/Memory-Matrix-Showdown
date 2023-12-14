@@ -10,46 +10,47 @@ public class SoundManager {
   public SoundManager() {
     try {
       AudioInputStream audioInputStream =
-          AudioSystem.getAudioInputStream(
-              getClass().getClassLoader().getResource("resource/sounds/background.wav"));
+              AudioSystem.getAudioInputStream(
+                      getClass().getClassLoader().getResource("resource/sounds/bg.wav"));
       background = AudioSystem.getClip();
       background.open(audioInputStream);
 
       AudioInputStream audioInputStream2 =
-          AudioSystem.getAudioInputStream(
-              getClass().getClassLoader().getResource("resource/sounds/gojo_hurt.wav"));
+              AudioSystem.getAudioInputStream(
+                      getClass().getClassLoader().getResource("resource/sounds/gojo_hurt.wav"));
       gojoHurt = AudioSystem.getClip();
       gojoHurt.open(audioInputStream2);
 
       AudioInputStream audioInputStream3 =
-          AudioSystem.getAudioInputStream(
-              getClass().getClassLoader().getResource("resource/sounds/dragon_attack.wav"));
+              AudioSystem.getAudioInputStream(
+                      getClass().getClassLoader().getResource("resource/sounds/dragon_attack.wav"));
       dragonAttack = AudioSystem.getClip();
       dragonAttack.open(audioInputStream3);
 
       AudioInputStream audioInputStream4 =
-          AudioSystem.getAudioInputStream(
-              getClass().getClassLoader().getResource("resource/sounds/dragon_idle.wav"));
+              AudioSystem.getAudioInputStream(
+                      getClass().getClassLoader().getResource("resource/sounds/dragon_idle.wav"));
       dragonIdle = AudioSystem.getClip();
       dragonIdle.open(audioInputStream4);
 
       AudioInputStream audioInputStream5 =
-          AudioSystem.getAudioInputStream(
-              getClass().getClassLoader().getResource("resource/sounds/gojo_attack.wav"));
+              AudioSystem.getAudioInputStream(
+                      getClass().getClassLoader().getResource("resource/sounds/gojo_attack.wav"));
       gojoAttack = AudioSystem.getClip();
       gojoAttack.open(audioInputStream5);
 
       AudioInputStream audioInputStream6 =
-          AudioSystem.getAudioInputStream(
-              getClass().getClassLoader().getResource("resource/sounds/gojo_idle.wav"));
+              AudioSystem.getAudioInputStream(
+                      getClass().getClassLoader().getResource("resource/sounds/gojo_idle.wav"));
       gojoIdle = AudioSystem.getClip();
       gojoIdle.open(audioInputStream6);
 
       AudioInputStream audioInputStream7 =
-          AudioSystem.getAudioInputStream(
-              getClass().getClassLoader().getResource("resource/sounds/gojo_win.wav"));
+              AudioSystem.getAudioInputStream(
+                      getClass().getClassLoader().getResource("resource/sounds/gojo_win.wav"));
       gojoWin = AudioSystem.getClip();
       gojoWin.open(audioInputStream7);
+
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -59,7 +60,9 @@ public class SoundManager {
   }
 
   public void playBackground() {
-    restart(background);
+    int startFrame = 5 * (int) background.getFormat().getFrameRate(); // 5 seconds
+    background.setFramePosition(startFrame);
+    background.setLoopPoints(startFrame, -1);
     background.loop(Clip.LOOP_CONTINUOUSLY);
   }
 
