@@ -28,14 +28,15 @@ public class Countdown implements Runnable {
   }
 
   @Override
-    public void run() {
-        try {
-            while (time > 0) {
-                Thread.sleep(1000);
-                time--;
-            }
-        } catch (InterruptedException e) {
-            return;
-        }
+public void run() {
+    while (time > 0) {
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        return; // thread is interrupted, stop counting, stop thread
+      }
+      time--;
     }
+    time--;
+  }
 }
