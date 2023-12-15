@@ -19,7 +19,8 @@ public class MouseController implements MouseListener {
       case "start":
         view.changePanel("gamePanel");
         view.gamePanel.start();
-
+        // mute background music when game starts
+        view.soundManager.stopBackground();
         break;
       case "exit":
         view.exit();

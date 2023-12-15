@@ -72,7 +72,7 @@ public class GamePanel extends JPanel implements Runnable {
     // Create and configure the remove button with the transparent image
     removeButton = new JButton();
     removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    removeButton.setName("removeButton");
+    removeButton.setName("remove");
 
     // Load the transparent image
     ImageIcon removeIcon =
@@ -103,8 +103,8 @@ public class GamePanel extends JPanel implements Runnable {
       int lastSymbolIndex = symbolTable.getComponentCount() - 1;
       if (lastSymbolIndex >= 0) {
         symbolTable.remove(lastSymbolIndex);
-        //        symbolTable.revalidate();
-        //        symbolTable.repaint();
+                symbolTable.revalidate();
+                symbolTable.repaint();
       }
     }
   }

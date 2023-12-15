@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.*;
-import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import javax.swing.*;
