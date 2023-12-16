@@ -35,8 +35,8 @@ public class Gojo extends Entity {
       heartNullSprite =
           ImageIO.read(
               getClass().getClassLoader().getResourceAsStream("resource/images/heart_null.png"));
-      heartFullSprite = scaleImage(heartFullSprite, 200, 200);
-      heartNullSprite = scaleImage(heartNullSprite, 200, 200);
+      heartFullSprite = scaleImage(heartFullSprite, View.GRID_WIDTH, View.GRID_HEIGHT * 2);
+      heartNullSprite = scaleImage(heartNullSprite, View.GRID_WIDTH, View.GRID_HEIGHT * 2);
       for (int i = 0; i < MAX_SPRITE_NUMBER; i++) {
         idleSprite[i] =
             ImageIO.read(
@@ -57,6 +57,10 @@ public class Gojo extends Entity {
         idleSprite[i] = scaleImage(idleSprite[i], WIDTH, HEIGHT);
         attackSprite[i] = scaleImage(attackSprite[i], WIDTH, HEIGHT);
         hurtSprite[i] = scaleImage(hurtSprite[i], WIDTH, HEIGHT);
+
+        scaleImage(idleSprite[i], WIDTH, HEIGHT);
+        scaleImage(attackSprite[i], WIDTH, HEIGHT);
+        scaleImage(hurtSprite[i], WIDTH, HEIGHT);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -103,17 +107,14 @@ public class Gojo extends Entity {
     spriteTime++;
     spriteTime %= SPRITE_INTERVAL + 1;
     g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, null);
-    // g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null);
     // draw health bar
     int i = 1;
     while (i <= health) {
-      g2.drawImage(heartFullSprite, 150 * i - 150, 0, null);
-      //      g2.drawImage(heartFullSprite, 150 * i - 150, 0, 200, 200, null);
+      g2.drawImage(heartFullSprite, View.GRID_WIDTH * i - View.GRID_WIDTH, 0, null);
       i++;
     }
     while (i <= 3) {
-      g2.drawImage(heartNullSprite, 150 * i - 150, 0, null);
-      //      g2.drawImage(heartNullSprite, 150 * i - 150, 0, 200, 200, null);
+      g2.drawImage(heartNullSprite, View.GRID_WIDTH * i - View.GRID_WIDTH, 0, null);
       i++;
     }
   }

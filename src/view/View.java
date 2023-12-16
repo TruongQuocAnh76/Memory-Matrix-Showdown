@@ -48,6 +48,7 @@ public class View extends JFrame {
     soundManager.playBackground();
 
     //    this.pack();
+    this.setUndecorated(true);
     this.setSize(screenSize);
     this.setLocationRelativeTo(null);
     this.setVisible(true);

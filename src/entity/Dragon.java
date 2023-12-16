@@ -17,8 +17,8 @@ public class Dragon extends Entity {
 
   private Stack<Symbols> weakness = new Stack<>(); // store dragon weakness this turn
 
-  public Dragon(int health) {
-    super(health);
+  public Dragon() {
+    super(1);
     attack = 1;
     this.attackSprite = new BufferedImage[MAX_SPRITE_NUMBER];
     this.idleSprite = new BufferedImage[MAX_SPRITE_NUMBER];
@@ -52,6 +52,10 @@ public class Dragon extends Entity {
         idleSprite[i] = scaleImage(idleSprite[i], WIDTH, HEIGHT);
         attackSprite[i] = scaleImage(attackSprite[i], WIDTH, HEIGHT);
         hurtSprite[i] = scaleImage(hurtSprite[i], WIDTH, HEIGHT);
+
+        scaleImage(idleSprite[i], WIDTH, HEIGHT);
+        scaleImage(attackSprite[i], WIDTH, HEIGHT);
+        scaleImage(hurtSprite[i], WIDTH, HEIGHT);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -85,8 +89,7 @@ public class Dragon extends Entity {
     }
     spriteTime++;
     spriteTime %= SPRITE_INTERVAL + 1;
-//    g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, null);
-    g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null);
+    g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, null);
   }
 
   public void setState(int state) {
