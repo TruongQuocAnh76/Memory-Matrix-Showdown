@@ -57,36 +57,46 @@ public class Dragon extends Entity {
     }
   }
 
-  public void draw(Graphics2D g2) {
-    switch (state) {
-      case 0: // idle
-        currentSprite = idleSprite[spriteNum];
-        if (spriteTime == SPRITE_INTERVAL) {
-          spriteNum++;
-          spriteNum %= MAX_SPRITE_NUMBER;
+  public void draw(Graphics2D g2d) {
+        if (state == IDLE) {
+            currentSprite = idleSprite[spriteNum]; 
+            if (spriteTime == SPRITE_INTERVAL) { 
+                spriteNum++; 
+                spriteTime = 0; 
+                if (spriteNum == MAX_SPRITE_NUMBER) {
+                    spriteNum = 0; 
+                }
+            }
+        } else if (state == ATTACK) {
+            currentSprite = attackSprite[spriteNum]; 
+            if (spriteTime == SPRITE_INTERVAL) { 
+                spriteNum++; 
+                spriteTime = 0;
+                if (spriteNum == MAX_SPRITE_NUMBER) {
+                    spriteNum = 0; 
+                }
+            }
+        } else if (state == HURT) { 
+            currentSprite = hurtSprite[spriteNum]; 
+            if (spriteTime == SPRITE_INTERVAL) { 
+                spriteNum++; 
+                spriteTime = 0; 
+                if (spriteNum == MAX_SPRITE_NUMBER) {
+                    spriteNum = 0; 
+                }
+            }
         }
-        break;
-      // add later
-      case 1: // attack
-        currentSprite = attackSprite[spriteNum];
+
+        spriteTime++; 
         if (spriteTime == SPRITE_INTERVAL) {
-          spriteNum++;
-          spriteNum %= MAX_SPRITE_NUMBER;
+            spriteNum++;
+            spriteTime = 0; 
+            if (spriteNum == MAX_SPRITE_NUMBER) { 
+                spriteNum = 0;
+            }
         }
-        break;
-      case 2: // hurt
-        currentSprite = hurtSprite[spriteNum];
-        if (spriteTime == SPRITE_INTERVAL) {
-          spriteNum++;
-          spriteNum %= MAX_SPRITE_NUMBER;
-        }
-        break;
+        g2d.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null); // vẽ sprite hiện tại
     }
-    spriteTime++;
-    spriteTime %= SPRITE_INTERVAL + 1;
-//    g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, null);
-    g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null);
-  }
 
   public void setState(int state) {
     this.state = state;
