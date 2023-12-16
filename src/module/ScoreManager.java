@@ -1,8 +1,6 @@
 package module;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,23 +8,28 @@ import java.util.Scanner;
 public class ScoreManager {
   private final String WORKING_DIRECTORY = System.getProperty("user.dir");
   private final String HIGH_SCORE_FILE_PATH = WORKING_DIRECTORY + "/highscore.txt";
-  private List<Integer> scores;
-  private File highScoreFile;
+  private final String easteregg =
+      "https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUXbmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXA%3D";
+  private final List<Integer> scores;
+  private final File highScoreFile;
   private Scanner in;
-  private FileWriter out;
+  private BufferedWriter out;
 
   public ScoreManager() {
     scores = new ArrayList<>(6);
     highScoreFile = new File(HIGH_SCORE_FILE_PATH);
     try {
-      if (!highScoreFile.exists()) highScoreFile.createNewFile();
+      if (!highScoreFile.exists()) {
+        highScoreFile.createNewFile();
+        out = new BufferedWriter(new FileWriter(HIGH_SCORE_FILE_PATH));
+        for (int i = 0; i < 5; i++) out.write("0 ");
+        out.write(easteregg);
+        out.close();
+      }
       in = new Scanner(highScoreFile);
 
       while (in.hasNextInt()) scores.add(in.nextInt());
       in.close();
-
-      // if there are not enough scores, add 0s
-      while (scores.size() < 5) scores.add(0);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -34,6 +37,7 @@ public class ScoreManager {
 
   /**
    * get scores by reading high score file
+   *
    * @return list of scores
    */
   public List<Integer> getScores() {
@@ -45,6 +49,7 @@ public class ScoreManager {
 
   /**
    * add the final scores to the high score file after a game ends
+   *
    * @param score
    */
   public void addScore(int score) {
@@ -56,8 +61,9 @@ public class ScoreManager {
   private void updateHighScoreFile() {
     // overwrite the file
     try {
-      out = new FileWriter(highScoreFile);
+      out = new BufferedWriter(new FileWriter(HIGH_SCORE_FILE_PATH));
       for (int score : scores) out.write(score + " ");
+      out.write(easteregg);
       out.close();
     } catch (IOException e) {
       e.printStackTrace();

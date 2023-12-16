@@ -11,7 +11,8 @@ import view.View;
 
 public class Gojo extends Entity {
   private final int X_COORDINATE = View.GRID_WIDTH;
-  private final int Y_COORDINATE = 4 * View.GRID_HEIGHT + 5; // small padding to make him stand on the ground
+  private final int Y_COORDINATE =
+      4 * View.GRID_HEIGHT + 5; // small padding to make him stand on the ground
   private final int WIDTH = View.GRID_WIDTH * 3;
   private final int HEIGHT = View.GRID_HEIGHT * 8;
   private BufferedImage heartFullSprite;

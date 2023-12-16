@@ -83,9 +83,9 @@ public class View extends JFrame {
 
     JLabel title = new JLabel();
     icon = new ImageIcon(getClass().getClassLoader().getResource("resource/images/title.png"));
-    img = icon.getImage().getScaledInstance(6 * GRID_WIDTH, 4 * GRID_HEIGHT, Image.SCALE_SMOOTH);
+    img = icon.getImage().getScaledInstance(7 * GRID_WIDTH, 4 * GRID_HEIGHT, Image.SCALE_SMOOTH);
     title.setIcon(new ImageIcon(img));
-    title.setBounds(5 * GRID_WIDTH, GRID_HEIGHT, 6 * GRID_WIDTH, GRID_HEIGHT * 4);
+    title.setBounds(5 * GRID_WIDTH, GRID_HEIGHT, 7 * GRID_WIDTH, GRID_HEIGHT * 4);
     background.add(title);
 
     addButton(
