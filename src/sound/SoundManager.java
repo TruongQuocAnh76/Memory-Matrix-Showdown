@@ -60,10 +60,10 @@ public class SoundManager {
   }
 
   public void playBackground() {
-    int startFrame = 5 * (int) background.getFormat().getFrameRate(); // 5 seconds
-    background.setFramePosition(startFrame);
-    background.setLoopPoints(startFrame, -1);
-    background.loop(Clip.LOOP_CONTINUOUSLY);
+//    int startFrame = 5 * (int) background.getFormat().getFrameRate(); // 5 seconds
+//    background.setFramePosition(startFrame);
+//    background.setLoopPoints(startFrame, -1);
+//    background.loop(Clip.LOOP_CONTINUOUSLY);
   }
 
   public void playGojoHurt() {

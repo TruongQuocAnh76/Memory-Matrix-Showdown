@@ -7,18 +7,19 @@ import java.util.Stack;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import module.Symbols;
+import view.View;
 
 public class Gojo extends Entity {
-  private final int X_COORDINATE = 50;
-  private final int Y_COORDINATE = 110;
-  private final int WIDTH = 500;
-  private final int HEIGHT = 600;
+  private final int X_COORDINATE = View.GRID_WIDTH;
+  private final int Y_COORDINATE = 4 * View.GRID_HEIGHT + 5; // small padding to make him stand on the ground
+  private final int WIDTH = View.GRID_WIDTH * 3;
+  private final int HEIGHT = View.GRID_HEIGHT * 8;
   private BufferedImage heartFullSprite;
   private BufferedImage heartNullSprite;
   private Stack<Symbols> spells = new Stack<>();
 
   public Gojo() {
-    super(1);
+    super(3);
     attack = 50;
     idleSprite = new BufferedImage[MAX_SPRITE_NUMBER];
     attackSprite = new BufferedImage[MAX_SPRITE_NUMBER];

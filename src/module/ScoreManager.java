@@ -24,11 +24,18 @@ public class ScoreManager {
 
       while (in.hasNextInt()) scores.add(in.nextInt());
       in.close();
+
+      // if there are not enough scores, add 0s
+      while (scores.size() < 5) scores.add(0);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
+  /**
+   * get scores by reading high score file
+   * @return list of scores
+   */
   public List<Integer> getScores() {
     in = new Scanner(HIGH_SCORE_FILE_PATH);
     for (int i = 0; in.hasNextInt(); i++) scores.set(i, in.nextInt());
@@ -36,6 +43,10 @@ public class ScoreManager {
     return scores;
   }
 
+  /**
+   * add the final scores to the high score file after a game ends
+   * @param score
+   */
   public void addScore(int score) {
     scores.add(score);
     sort();

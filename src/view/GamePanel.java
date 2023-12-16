@@ -9,10 +9,7 @@ import module.ScoreManager;
 
 @SuppressWarnings("all")
 public class GamePanel extends JPanel implements Runnable {
-  private final int fps = 30;
-
-  private final int DEFAULT_SYMBOL_SIZE = 1024;
-  // table to display weakness and user's input
+  private final int fps = 60;
   JPanel symbolPanel = new JPanel();
   private JButton removeButton;
   private boolean isStartOfTheGame = true;
@@ -28,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
           super.paintComponent(g);
           Graphics2D g2 = (Graphics2D) g;
           g2.setFont(view.gameFont.deriveFont(Font.BOLD, 80));
-          g2.drawString(timer.getTime() + "", 80, 122);
+          g2.drawString(timer.getTime() + "", View.GRID_WIDTH / 3, View.GRID_HEIGHT * 3/2);
         }
       };
   private InGameSpriteManager spriteManager = new InGameSpriteManager();
@@ -53,9 +50,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     ImageIcon clock =
         new ImageIcon(getClass().getClassLoader().getResource("resource/images/clock.png"));
-    clock = new ImageIcon(clock.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+    clock = new ImageIcon(clock.getImage().getScaledInstance(View.GRID_WIDTH, View.GRID_HEIGHT * 2, Image.SCALE_SMOOTH));
     clockLabel.setIcon(clock);
-    clockLabel.setBounds(-20, 700, 200, 200);
+    clockLabel.setBounds(0, View.GRID_HEIGHT * 14, View.GRID_WIDTH, View.GRID_HEIGHT * 2);
     this.add(clockLabel);
 
     JLabel exitButton = new JLabel();
@@ -63,9 +60,9 @@ public class GamePanel extends JPanel implements Runnable {
     exitButton.setName("back");
     ImageIcon exitIcon =
         new ImageIcon(getClass().getClassLoader().getResource("resource/images/exit_button.png"));
-    exitIcon = new ImageIcon(exitIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH));
+    exitIcon = new ImageIcon(exitIcon.getImage().getScaledInstance(View.GRID_WIDTH * 2, View.GRID_HEIGHT * 2, Image.SCALE_SMOOTH));
     exitButton.setIcon(exitIcon);
-    exitButton.setBounds(1350, 700, 300, 300);
+    exitButton.setBounds(14 * View.GRID_WIDTH, 14 * View.GRID_HEIGHT, View.GRID_WIDTH * 2, View.GRID_HEIGHT * 2);
     exitButton.addMouseListener(view.mouseController);
     this.add(exitButton);
 
@@ -80,19 +77,19 @@ public class GamePanel extends JPanel implements Runnable {
 
     // Ensure the image has a transparent background
     removeIcon =
-        new ImageIcon(removeIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+        new ImageIcon(removeIcon.getImage().getScaledInstance(View.GRID_WIDTH * 2, View.GRID_HEIGHT * 2, Image.SCALE_SMOOTH));
     // Set the button to be transparent
     removeButton.setContentAreaFilled(false);
     removeButton.setBorderPainted(false);
 
     removeButton.setIcon(removeIcon);
-    removeButton.setBounds(1400, 550, 200, 200);
+    removeButton.setBounds(14 * View.GRID_WIDTH, 11 * View.GRID_HEIGHT, View.GRID_WIDTH * 2, View.GRID_HEIGHT * 2);
     removeButton.addMouseListener(view.mouseController);
     this.add(removeButton);
 
     scoreLabel.setFont(view.gameFont.deriveFont(Font.BOLD, 24));
     scoreLabel.setForeground(Color.BLACK);
-    scoreLabel.setBounds(1400, 20, 300, 40);
+    scoreLabel.setBounds(14 * View.GRID_WIDTH, 0, View.GRID_WIDTH, View.GRID_HEIGHT);
     this.add(scoreLabel);
   }
 
@@ -114,19 +111,20 @@ public class GamePanel extends JPanel implements Runnable {
     inputPanel.setOpaque(false);
 
     JLabel inputTable = new JLabel();
-    spriteManager.setTableSpriteSize(1200, 1000);
+    inputTable.setLayout(null);
+    spriteManager.setTableSpriteSize(8 * View.GRID_WIDTH, 2 * View.GRID_HEIGHT);
     inputTable.setIcon(spriteManager.getTableSprite());
-    inputPanel.setBounds(200, 350, 1200, 1000);
+    inputPanel.setBounds(4 * View.GRID_WIDTH, 13 * View.GRID_HEIGHT, 8 * View.GRID_WIDTH, 2 * View.GRID_HEIGHT);
     inputPanel.add(inputTable);
 
-    spriteManager.setSymbolSpriteSize(DEFAULT_SYMBOL_SIZE / 4, DEFAULT_SYMBOL_SIZE / 4);
+    spriteManager.setSymbolSpriteSize(View.GRID_WIDTH, View.GRID_HEIGHT);
     for (int i = 1; i <= 6; i++) {
       JLabel symbol = new JLabel();
       symbol.addMouseListener(view.mouseController);
       symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       symbol.setName("symbol" + i);
       symbol.setIcon(spriteManager.getSymbolSprite(i));
-      symbol.setBounds(50 + (i - 1) * 170, 280, DEFAULT_SYMBOL_SIZE / 4, DEFAULT_SYMBOL_SIZE / 4);
+      symbol.setBounds(View.GRID_WIDTH / 2 + (View.GRID_WIDTH * (i - 1) + View.GRID_WIDTH / 5 * (i - 1)), View.GRID_HEIGHT / 2, View.GRID_WIDTH, View.GRID_HEIGHT);
       inputTable.add(symbol);
     }
     this.add(inputPanel);
@@ -137,8 +135,8 @@ public class GamePanel extends JPanel implements Runnable {
     symbolPanel.setBackground(
         new Color(
             0, 0, 0, 0)); // for some reason, setOpaque(false) doesn't work, so i use this instead
-    symbolPanel.setBounds(300, 150, 1000, 800);
-    spriteManager.setTableSpriteSize(1000, 800);
+    symbolPanel.setBounds(4 * View.GRID_WIDTH, 6 * View.GRID_HEIGHT, 7 * View.GRID_WIDTH, 2 * View.GRID_HEIGHT);
+    spriteManager.setTableSpriteSize(7 * View.GRID_WIDTH, 2 * View.GRID_HEIGHT);
     symbolTable.setIcon(spriteManager.getTableSprite());
     symbolPanel.add(symbolTable);
     this.add(symbolPanel);
@@ -189,13 +187,13 @@ public class GamePanel extends JPanel implements Runnable {
     dragon.revealWeakness();
     // adding weakness symbols to weakness table
     symbolTable.removeAll(); // remove all previous symbols
-    spriteManager.setSymbolSpriteSize(DEFAULT_SYMBOL_SIZE / 5, DEFAULT_SYMBOL_SIZE / 5);
+    spriteManager.setSymbolSpriteSize(View.GRID_WIDTH, View.GRID_HEIGHT);
     for (int i = 0; i < 5; i++) {
       JLabel symbol = new JLabel();
       symbol.addMouseListener(view.mouseController);
       symbol.setName("weakness" + i);
       symbol.setIcon(spriteManager.getSymbolSprite(dragon.getWeakness().get(i).getIndex()));
-      symbol.setBounds(50 + (i * 170), 225, DEFAULT_SYMBOL_SIZE / 5, DEFAULT_SYMBOL_SIZE / 5);
+      symbol.setBounds(View.GRID_WIDTH / 2 + (View.GRID_WIDTH * i + View.GRID_WIDTH / 5 * i), View.GRID_HEIGHT / 2, View.GRID_WIDTH, View.GRID_HEIGHT);
       symbolTable.add(symbol);
     }
     // starts memorize phase countdown
@@ -223,7 +221,6 @@ public class GamePanel extends JPanel implements Runnable {
     // starts attack phase countdown
     timer.countdown(Countdown.RESULT_TIME);
     updateScoreLabel();
-    System.out.println("Score: " + score); // Kiểm tra giá trị điểm số
   }
 
   private void checkInput() {
@@ -286,16 +283,12 @@ public class GamePanel extends JPanel implements Runnable {
 
   public void castSpell(String symbolName) {
     // add inputted symbol to table
-    spriteManager.setSymbolSpriteSize(DEFAULT_SYMBOL_SIZE / 5, DEFAULT_SYMBOL_SIZE / 5);
+    spriteManager.setSymbolSpriteSize(View.GRID_WIDTH, View.GRID_HEIGHT);
     JLabel symbol = new JLabel();
     symbol.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     symbol.setName("input" + symbolName);
     symbol.setIcon(spriteManager.getSymbolSprite(Integer.parseInt(symbolName.substring(6))));
-    symbol.setBounds(
-        50 + (gojo.getSpells().size() * 170),
-        225,
-        DEFAULT_SYMBOL_SIZE / 5,
-        DEFAULT_SYMBOL_SIZE / 5);
+    symbol.setBounds(View.GRID_WIDTH / 2 + (View.GRID_WIDTH * gojo.getSpells().size() + View.GRID_WIDTH / 5 * gojo.getSpells().size()), View.GRID_HEIGHT / 2, View.GRID_WIDTH, View.GRID_HEIGHT);
     symbolTable.add(symbol);
 
     gojo.castSpell(symbolName);
@@ -318,7 +311,7 @@ public class GamePanel extends JPanel implements Runnable {
     thread.start();
   }
 
-  /** exit game, stop the game thread and reset the game for next time */
+  /** exit game, stop the game thread and */
   public void stop() {
     thread.interrupt();
   }
@@ -326,6 +319,7 @@ public class GamePanel extends JPanel implements Runnable {
   @Override
   public void run() {
     while (!thread.isInterrupted()) {
+      long startTime = System.currentTimeMillis();
       if (isMemorizePhase) memorizePhase();
       else if (isCastingPhase) castingPhase();
       else attackPhase();
@@ -333,12 +327,20 @@ public class GamePanel extends JPanel implements Runnable {
       int rand = (int) (Math.random() * 10000);
       if (rand == 69) view.soundManager.playGojoIdle();
       else if (rand == 420) view.soundManager.playDragonIdle();
+
+      long endTime = System.currentTimeMillis();
+
+      long sleepTime = 1000 / fps - (endTime - startTime) * 1000;
       try {
-        Thread.sleep(1000 / fps);
+        Thread.sleep(sleepTime > 0 ? sleepTime : 0);
       } catch (InterruptedException e) {
-        break;
+        return;
       }
+
+      startTime = System.nanoTime();
       repaint();
+      endTime = System.nanoTime();
+      System.out.println(endTime - startTime);
     }
   }
 

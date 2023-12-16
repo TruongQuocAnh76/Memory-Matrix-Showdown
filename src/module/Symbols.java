@@ -7,9 +7,6 @@ public class Symbols {
     this.index = index;
   }
 
-  public String getImagePath() {
-    return "resource/images/symbol" + index + ".png";
-  }
   public int getIndex() {
     return index;
   }

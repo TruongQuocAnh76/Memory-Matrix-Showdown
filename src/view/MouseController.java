@@ -44,7 +44,7 @@ public class MouseController implements MouseListener {
         this.view.gamePanel.castSpell(component.getName());
         break;
       case "remove": view.gamePanel.removeLastSymbol(); break;
-      default: // from end screen to main menu
+      default: // case label from end screen
         this.view.changePanel("mainMenu");
     }
   }
