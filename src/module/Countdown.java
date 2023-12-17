@@ -3,7 +3,7 @@ package module;
 public class Countdown implements Runnable {
   private int time;
   private Thread thread;
-  public static final int MEMORIZE_TIME = 9;
+  public static final int MEMORIZE_TIME = 5;
   public static final int INPUT_TIME = 9;
   public static final int RESULT_TIME = 1;
   public int getTime() {

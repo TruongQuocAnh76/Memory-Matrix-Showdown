@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.*;
@@ -13,24 +14,32 @@ public class MouseController implements MouseListener {
 
   @Override
   public void mouseClicked(MouseEvent e) {
-    JLabel panel = (JLabel) e.getSource();
-    switch (panel.getName()) {
+    JComponent component = (JComponent) e.getSource();
+    switch (component.getName()) {
       case "start":
         view.changePanel("gamePanel");
+        view.gamePanel.start();
+        // mute background music when game starts
+        view.soundManager.stopBackground();
         break;
       case "exit":
         view.exit();
         break;
       case "highScore":
         // TODO
-        System.out.println("highScore");
+        view.changePanel("highScore");
         break;
       case "help":
         // TODO
-        System.out.println("help");
+        view.changePanel("helpScreen");
         break;
       case "back":
         view.changePanel("mainMenu");
+        view.gamePanel.stop();
+        break;
+      case "mute":
+        // TODO
+        view.soundManager.stopBackground();
         break;
       case "symbol1":
       case "symbol2":
@@ -38,9 +47,11 @@ public class MouseController implements MouseListener {
       case "symbol4":
       case "symbol5":
       case "symbol6":
-        this.view.gamePanel.castSpell(panel.getName());
+        this.view.gamePanel.castSpell(component.getName());
         break;
-      default : this.view.changePanel("mainMenu");
+      case "remove": view.gamePanel.removeLastSymbol(); break;
+      default: // from end screen to main menu
+        this.view.changePanel("mainMenu");
     }
   }
 

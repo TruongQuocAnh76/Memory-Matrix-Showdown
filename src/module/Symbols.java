@@ -8,7 +8,10 @@ public class Symbols {
   }
 
   public String getImagePath() {
-    return "images/symbol" + index + ".png";
+    return "resource/images/symbol" + index + ".png";
+  }
+  public int getIndex() {
+    return index;
   }
 
   @Override

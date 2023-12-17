@@ -6,11 +6,13 @@ import java.util.Stack;
 import javax.imageio.ImageIO;
 import module.Symbols;
 
+
 public class Dragon extends Entity {
   private final int X_COORDINATE = 800;
   private final int Y_COORDINATE = 100;
   private final int WIDTH = 800;
   private final int HEIGHT = 700;
+
 
   private Stack<Symbols> weakness = new Stack<>(); // store dragon weakness this turn
 
@@ -31,57 +33,70 @@ public class Dragon extends Entity {
     try {
       for (int i = 0; i < MAX_SPRITE_NUMBER; i++) {
         idleSprite[i] =
-            ImageIO.read(
-                getClass()
-                    .getClassLoader()
-                    .getResourceAsStream("images/dragon_idle" + (i + 1) + ".png"));
+                ImageIO.read(
+                        getClass()
+                                .getClassLoader()
+                                .getResourceAsStream("resource/images/dragon_idle" + (i + 1) + ".png"));
         attackSprite[i] =
-            ImageIO.read(
-                getClass()
-                    .getClassLoader()
-                    .getResourceAsStream("images/dragon_attack" + (i + 1) + ".png"));
+                ImageIO.read(
+                        getClass()
+                                .getClassLoader()
+                                .getResourceAsStream("resource/images/dragonattack" + (i + 1) + ".png"));
         hurtSprite[i] =
-            ImageIO.read(
-                getClass()
-                    .getClassLoader()
-                    .getResourceAsStream("images/dragon_hurt" + (i + 1) + ".png"));
+                ImageIO.read(
+                        getClass()
+                                .getClassLoader()
+                                .getResourceAsStream("resource/images/dragonhurt" + (i + 1) + ".png"));
 
-        // TODO: optimize this
+        idleSprite[i] = scaleImage(idleSprite[i], WIDTH, HEIGHT);
+        attackSprite[i] = scaleImage(attackSprite[i], WIDTH, HEIGHT);
+        hurtSprite[i] = scaleImage(hurtSprite[i], WIDTH, HEIGHT);
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public void draw(Graphics2D g2) {
-    switch (state) {
-      case 0: // idle
-        currentSprite = idleSprite[spriteNum];
-        if (spriteTime == SPRITE_INTERVAL) {
-          spriteNum++;
-          spriteNum %= MAX_SPRITE_NUMBER;
+  public void draw(Graphics2D g2d) {
+        if (state == IDLE) {
+            currentSprite = idleSprite[spriteNum]; 
+            if (spriteTime == SPRITE_INTERVAL) { 
+                spriteNum++; 
+                spriteTime = 0; 
+                if (spriteNum == MAX_SPRITE_NUMBER) {
+                    spriteNum = 0; 
+                }
+            }
+        } else if (state == ATTACK) {
+            currentSprite = attackSprite[spriteNum]; 
+            if (spriteTime == SPRITE_INTERVAL) { 
+                spriteNum++; 
+                spriteTime = 0;
+                if (spriteNum == MAX_SPRITE_NUMBER) {
+                    spriteNum = 0; 
+                }
+            }
+        } else if (state == HURT) { 
+            currentSprite = hurtSprite[spriteNum]; 
+            if (spriteTime == SPRITE_INTERVAL) { 
+                spriteNum++; 
+                spriteTime = 0; 
+                if (spriteNum == MAX_SPRITE_NUMBER) {
+                    spriteNum = 0; 
+                }
+            }
         }
-        break;
-        // add later
-      case 1: // attack
-        currentSprite = attackSprite[spriteNum];
+
+        spriteTime++; 
         if (spriteTime == SPRITE_INTERVAL) {
-          spriteNum++;
-          spriteNum %= MAX_SPRITE_NUMBER;
+            spriteNum++;
+            spriteTime = 0; 
+            if (spriteNum == MAX_SPRITE_NUMBER) { 
+                spriteNum = 0;
+            }
         }
-        break;
-      case 2: // hurt
-        currentSprite = hurtSprite[spriteNum];
-        if (spriteTime == SPRITE_INTERVAL) {
-          spriteNum++;
-          spriteNum %= MAX_SPRITE_NUMBER;
-        }
-        break;
+        g2d.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null); // vẽ sprite hiện tại
     }
-    spriteTime++;
-    spriteTime %= SPRITE_INTERVAL + 1;
-    g2.drawImage(currentSprite, X_COORDINATE, Y_COORDINATE, WIDTH, HEIGHT, null);
-  }
 
   public void setState(int state) {
     this.state = state;
