@@ -121,8 +121,7 @@ public class Gojo extends Entity {
   }
 
   /**
-   * adding spells (or spells or what ever it identify) to the stack of spells
-   *
+   * adding 1 spells (or symbols or what ever it identify) to the stack of spells
    * @param symbolName
    */
   public void castSpell(String symbolName) {

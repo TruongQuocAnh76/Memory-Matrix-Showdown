@@ -10,10 +10,9 @@ import sound.SoundManager;
 public class View extends JFrame {
 
   public static final int MAX_GRID = 16; // 16x16
-  private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+  private static final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
   public static final int GRID_WIDTH = screenSize.width / MAX_GRID;
   public static final int GRID_HEIGHT = screenSize.height / MAX_GRID;
-  
   private final CardLayout cardLayout = new CardLayout();
   public MouseController mouseController = new MouseController(this);
   public GamePanel gamePanel;
@@ -47,7 +46,6 @@ public class View extends JFrame {
 
     soundManager.playBackground();
 
-    //    this.pack();
     this.setUndecorated(true);
     this.setSize(screenSize);
     this.setLocationRelativeTo(null);
@@ -260,6 +258,15 @@ public class View extends JFrame {
     this.add(highScoreScreen, "highScore");
   }
 
+  /**
+   * called when the game ends, update the score on the end screen
+   */
+  public void updateScore() {
+    JLabel text = (JLabel) endScreen.getComponent(1); // 0 is the image label, 1 is the text label
+    text.setText("Final score: " + gamePanel.getScore());
+    scoreManager.addScore(gamePanel.getScore());
+    updateHighScoreScreen();
+  }
   private void updateHighScoreScreen() {
     List<Integer> scores = scoreManager.getScores();
     String scoresText =
@@ -275,13 +282,6 @@ public class View extends JFrame {
                 + "</html>",
             scores.get(0), scores.get(1), scores.get(2), scores.get(3), scores.get(4));
     scoresLabel.setText(scoresText);
-  }
-
-  public void updateScore() {
-    JLabel text = (JLabel) endScreen.getComponent(1); // 0 is the image label, 1 is the text label
-    text.setText("Final score: " + gamePanel.getScore());
-    scoreManager.addScore(gamePanel.getScore());
-    updateHighScoreScreen();
   }
 
   public void changePanel(String panelName) {

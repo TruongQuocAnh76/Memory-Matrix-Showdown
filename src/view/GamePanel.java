@@ -8,10 +8,8 @@ import module.InGameSpriteManager;
 
 @SuppressWarnings("all")
 public class GamePanel extends JPanel implements Runnable {
-  private final int fps = 60;
+  private final int fps = 30;
   public int score = 0;
-  JPanel symbolPanel = new JPanel();
-  private JButton removeButton;
   private boolean isStartOfTheGame = true;
   private View view;
   private Gojo gojo = new Gojo();
@@ -31,11 +29,16 @@ public class GamePanel extends JPanel implements Runnable {
   private InGameSpriteManager spriteManager = new InGameSpriteManager();
   private boolean isMemorizePhase = true;
   private boolean isCastingPhase = false;
+  // table to display weakness
+  private JPanel symbolPanel = new JPanel();
+
   private JLabel symbolTable = new JLabel();
+  // panel that contains table label to receive player input
   private JPanel inputPanel = new JPanel();
+  // label to display score
   private JLabel scoreLabel = new JLabel();
   private Thread thread = new Thread(this);
-
+  private int turn = 1;
   public GamePanel(View view) {
     this.view = view;
     this.setLayout(null);
@@ -57,9 +60,9 @@ public class GamePanel extends JPanel implements Runnable {
     clockLabel.setBounds(0, View.GRID_HEIGHT * 13, View.GRID_WIDTH, View.GRID_HEIGHT * 2);
     this.add(clockLabel);
 
-    JLabel exitButton = new JLabel();
-    exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    exitButton.setName("back");
+    JLabel backButton = new JLabel();
+    backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    backButton.setName("back");
     ImageIcon exitIcon =
         new ImageIcon(getClass().getClassLoader().getResource("resource/images/exit_button.png"));
     exitIcon =
@@ -67,31 +70,25 @@ public class GamePanel extends JPanel implements Runnable {
             exitIcon
                 .getImage()
                 .getScaledInstance(View.GRID_WIDTH * 2, View.GRID_HEIGHT * 2, Image.SCALE_SMOOTH));
-    exitButton.setIcon(exitIcon);
-    exitButton.setBounds(
+    backButton.setIcon(exitIcon);
+    backButton.setBounds(
         14 * View.GRID_WIDTH, 13 * View.GRID_HEIGHT, View.GRID_WIDTH * 2, View.GRID_HEIGHT * 2);
-    exitButton.addMouseListener(view.mouseController);
-    this.add(exitButton);
+    backButton.addMouseListener(view.mouseController);
+    this.add(backButton);
 
     // Create and configure the remove button with the transparent image
-    removeButton = new JButton();
+    JButton removeButton = new JButton();
     removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     removeButton.setName("remove");
-
-    // Load the transparent image
     ImageIcon removeIcon =
         new ImageIcon(getClass().getClassLoader().getResource("resource/images/remove_button.png"));
-
-    // Ensure the image has a transparent background
     removeIcon =
         new ImageIcon(
             removeIcon
                 .getImage()
                 .getScaledInstance(View.GRID_WIDTH * 2, View.GRID_HEIGHT * 2, Image.SCALE_SMOOTH));
-    // Set the button to be transparent
     removeButton.setContentAreaFilled(false);
     removeButton.setBorderPainted(false);
-
     removeButton.setIcon(removeIcon);
     removeButton.setBounds(
         14 * View.GRID_WIDTH, 11 * View.GRID_HEIGHT, View.GRID_WIDTH * 2, View.GRID_HEIGHT * 2);
@@ -105,15 +102,7 @@ public class GamePanel extends JPanel implements Runnable {
     this.add(scoreLabel);
   }
 
-  public void removeLastSymbol() {
-    if (!gojo.getSpells().isEmpty()) {
-      gojo.getSpells().pop(); // Remove the last symbol from the stack
-      // Remove the last added symbol from the symbolTable
-      int lastSymbolIndex = symbolTable.getComponentCount() - 1;
-      if (lastSymbolIndex >= 0) symbolTable.remove(lastSymbolIndex);
-    }
-  }
-
+  /** add symbol table for input and symbol table for displaying weakness and casting */
   private void addSymbolTable() {
     // table to receive player input
     inputPanel.setOpaque(false);
@@ -164,25 +153,19 @@ public class GamePanel extends JPanel implements Runnable {
     gojo.draw(g2);
     dragon.draw(g2);
   }
-
-  private void attackPhase() {
-    if (!timer.isCounting()) { // end of attack phase, back to memorize phase
+  private void memorizePhase() {
+    if (isStartOfTheGame) {
+      isStartOfTheGame = false;
+      memorizePhaseSetup();
+    }
+    if (!timer.isCounting()) { // memorize phase ends, hide weakness table, starts input phase
       // stop counting
       timer.stopCounting();
-      // transit to memorize phase
-      isMemorizePhase = true;
-      // change state of entities to idle
-      gojo.setState(Entity.IDLE);
-      dragon.setState(Entity.IDLE);
+      // transit to casting phase
+      isMemorizePhase = false;
+      isCastingPhase = true;
 
-      // check if game is over
-      if (gojo.getHealth() == 0) {
-        view.updateScore();
-        view.changePanel("endScreen");
-        stop();
-      }
-
-      memorizePhaseSetup();
+      castingPhaseSetup();
     }
   }
 
@@ -208,7 +191,7 @@ public class GamePanel extends JPanel implements Runnable {
       symbolTable.add(symbol);
     }
     // starts memorize phase countdown
-    timer.countdown(Countdown.MEMORIZE_TIME);
+    timer.countdown(5 / turn + 4);
   }
 
   private void castingPhase() {
@@ -223,6 +206,37 @@ public class GamePanel extends JPanel implements Runnable {
       attackPhaseSetup();
     }
   }
+  private void castingPhaseSetup() {
+    // show input table
+    inputPanel.setVisible(true);
+    // clear symbol table for player's input
+    symbolTable.removeAll();
+    // starts input phase countdown
+    timer.countdown(Countdown.INPUT_TIME);
+  }
+
+  private void attackPhase() {
+    if (!timer.isCounting()) { // end of attack phase, back to memorize phase
+      // stop counting
+      timer.stopCounting();
+      // transit to memorize phase
+      isMemorizePhase = true;
+      // change state of entities to idle
+      gojo.setState(Entity.IDLE);
+      dragon.setState(Entity.IDLE);
+
+      // check if game is over
+      if (gojo.getHealth() == 0) {
+        view.updateScore();
+        view.changePanel("endScreen");
+        stop();
+      }
+
+      // to the next turn
+      turn++;
+      memorizePhaseSetup();
+    }
+  }
 
   private void attackPhaseSetup() {
     // hide input table and symbol table
@@ -230,7 +244,7 @@ public class GamePanel extends JPanel implements Runnable {
     symbolPanel.setVisible(false);
     symbolTable.setVisible(false);
     // starts attack phase countdown
-    timer.countdown(Countdown.RESULT_TIME);
+    timer.countdown(Countdown.ATTACK_TIME);
     updateScoreLabel();
   }
 
@@ -269,31 +283,11 @@ public class GamePanel extends JPanel implements Runnable {
     scoreLabel.setText("Score: " + score);
   }
 
-  private void memorizePhase() {
-    if (isStartOfTheGame) {
-      isStartOfTheGame = false;
-      memorizePhaseSetup();
-    }
-    if (!timer.isCounting()) { // memorize phase ends, hide weakness table, starts input phase
-      // stop counting
-      timer.stopCounting();
-      // transit to casting phase
-      isMemorizePhase = false;
-      isCastingPhase = true;
-
-      castingPhaseSetup();
-    }
-  }
-
-  private void castingPhaseSetup() {
-    // show input table
-    inputPanel.setVisible(true);
-    // clear symbol table for player's input
-    symbolTable.removeAll();
-    // starts input phase countdown
-    timer.countdown(Countdown.INPUT_TIME);
-  }
-
+  /**
+   * called each time player input a symbol, add the symbol to the display table and the input stack
+   *
+   * @param symbolName
+   */
   public void castSpell(String symbolName) {
     // add inputted symbol to table
     spriteManager.setSymbolSpriteSize(View.GRID_WIDTH, View.GRID_HEIGHT);
@@ -324,11 +318,12 @@ public class GamePanel extends JPanel implements Runnable {
     inputPanel.setVisible(false);
   }
 
+  /** start the game thread */
   public void start() {
     thread.start();
   }
 
-  /** exit game, stop the game thread */
+  /** stop the game thread */
   public void stop() {
     thread.interrupt();
   }
@@ -359,5 +354,14 @@ public class GamePanel extends JPanel implements Runnable {
 
   public int getScore() {
     return score;
+  }
+
+  public void removeLastSymbol() {
+    if (!gojo.getSpells().isEmpty()) {
+      gojo.getSpells().pop(); // Remove the last symbol from the stack
+      // Remove the last added symbol from the symbolTable
+      int lastSymbolIndex = symbolTable.getComponentCount() - 1;
+      if (lastSymbolIndex >= 0) symbolTable.remove(lastSymbolIndex);
+    }
   }
 }

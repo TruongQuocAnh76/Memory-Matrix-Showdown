@@ -1,16 +1,14 @@
 package module;
 
 public class Countdown implements Runnable {
-  public static final int MEMORIZE_TIME = 5;
   public static final int INPUT_TIME = 9;
-  public static final int RESULT_TIME = 1;
+  public static final int ATTACK_TIME = 1;
   private int time;
   private Thread thread;
 
   public int getTime() {
     return time;
   }
-
 
   public void countdown(int time) {
     thread = new Thread(this);
@@ -23,7 +21,7 @@ public class Countdown implements Runnable {
   }
 
   public void stopCounting() {
-    time = -1;
+    time = 0;
     thread.interrupt();
   }
 
@@ -33,10 +31,9 @@ public class Countdown implements Runnable {
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
-        return; // thread is interrupted, stop counting, stop thread
+        return;
       }
       time--;
     }
-    time--;
   }
 }

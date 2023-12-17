@@ -113,12 +113,11 @@ public class Dragon extends Entity {
   }
 
   /**
-   * take damage and change sprite to hurt
+   * change state to hurt
    *
    * @param damage
    */
   public void takeDamage(int damage) {
     this.setState(Entity.HURT);
-    this.health -= damage;
   }
 }
