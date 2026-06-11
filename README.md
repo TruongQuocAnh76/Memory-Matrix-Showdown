@@ -1,5 +1,7 @@
 # Memory Matrix Showdown
 
+Current release: **Version 2.0**
+
 ### Team Members:
 
     - Bùi Thọ An
