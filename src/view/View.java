@@ -30,7 +30,7 @@ public class View extends JFrame {
   }
 
   private void init() {
-    setTitle("Memory Matrix Showdown");
+    setTitle("Memory Matrix Showdown v2.0");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setLayout(cardLayout);
     this.setResizable(false);
